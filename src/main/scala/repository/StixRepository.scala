@@ -12,8 +12,8 @@ object StixRepository {
     stixData = loader.load().get
   }
 
-  def getAllByType(requestedType: String): Seq[StixObj] = {
-    stixData.objects.filter(_.`type` == requestedType).toList
+  def getAllByType(stixType: String): Seq[StixObj] = {
+    stixData.objects.filter(_.`type` == stixType).toList
   }
 
 }
