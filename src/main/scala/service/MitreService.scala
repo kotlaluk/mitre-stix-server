@@ -14,7 +14,7 @@ object MitreService {
   StixRepository.initialize(loader)
 
   val routes = Router(
-    "/attacks" -> AttackEndpoints.endpoints
+    "/techniques" -> TechniqueEndpoints.endpoints
   ).orNotFound
 
 }

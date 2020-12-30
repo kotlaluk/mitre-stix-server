@@ -3,7 +3,7 @@ package dao
 
 import com.kodekutters.stix.StixObj
 
-trait StixDao {
+trait StixObjDao {
 
   def findAll(removeRevoked: Boolean): Seq[StixObj]
 
