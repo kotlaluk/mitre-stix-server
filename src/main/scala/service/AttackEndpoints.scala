@@ -15,6 +15,11 @@ object AttackEndpoints {
 
   val endpoints = HttpRoutes.of[IO] {
     case GET -> Root => Ok(AttackDao.findAll(true).asJson)
+
+    case GET -> Root / id => AttackDao.findByMitreId(id) match {
+      case Some(entity) => Ok(entity.asJson)
+      case None => NotFound()
+    }
   }
 
 }
