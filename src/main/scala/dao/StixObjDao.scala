@@ -5,6 +5,8 @@ import com.kodekutters.stix.StixObj
 
 trait StixObjDao {
 
-  def findAll(removeRevoked: Boolean): Seq[StixObj]
+  type StixType <: StixObj
+
+  def findAll(removeRevoked: Boolean = true): Seq[StixType]
 
 }

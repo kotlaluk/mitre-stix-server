@@ -8,12 +8,16 @@ import com.kodekutters.stix.{AttackPattern, StixObj}
 
 object Techniques extends StixObjDao {
 
+  override type StixType = AttackPattern
+
   private val techniqueFilter = typeFilter(AttackPattern.`type`)
 
-  def findTechniques: (StixObj => Boolean) => Seq[StixObj] = filter(techniqueFilter)(_)
+  def findTechniques = filter(techniqueFilter)(_)
 
-  override def findAll(removeRevoked: Boolean = false): List[AttackPattern] = {
-    val allTechniques = findTechniques(_ => true).asInstanceOf[List[AttackPattern]]
+  override def findAll(removeRevoked: Boolean): Seq[AttackPattern] = {
+    val allTechniques = findTechniques(_ => true).collect {
+      case technique: AttackPattern => technique
+    }
     if (removeRevoked) {
       return allTechniques.filter(attack => {
         val customProps = attack.custom.get
