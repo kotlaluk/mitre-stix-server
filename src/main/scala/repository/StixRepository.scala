@@ -1,29 +1,29 @@
 package org.example.mitrestixserver
 package repository
 
-import com.kodekutters.stix.{Bundle, StixObj}
+import com.kodekutters.stix.SDO
 
 
-object StixRepository {
+trait StixRepository {
 
-  implicit class Predicate[A](val p1: A => Boolean) extends AnyVal {
-    def and[B >: A](p2: B => Boolean): A => Boolean = (a: A) => p1(a) && p2(a)
-    def or[B >: A](p2: B => Boolean): A => Boolean = (a: A) => p1(a) || p2(a)
+  type StixType <: SDO
+
+  def findAll(): Seq[StixType]
+
+  def findFilter(filter: StixType => Boolean): Seq[StixType] = {
+    findAll().filter(filter)
   }
 
-  private var stixData = new Bundle()
-
-  def initialize(loader: Loader): Unit = {
-    stixData = loader.load().get
+  def findAllCurrent(): Seq[StixType] = {
+    val filter: StixType => Boolean = obj => {
+      val customProps = obj.custom.get
+      ! (obj.revoked.getOrElse(false) || customProps.nodes.contains("x_mitre_deprecated"))
+    }
+    findFilter(filter)
   }
 
-  def filter(filter1: StixObj => Boolean)(filter2: StixObj => Boolean): Seq[StixObj] = {
-    stixData.objects.filter(filter1 and filter2).toList
+  def findByMitreId(id: String): Option[StixType] = {
+    val filter: StixType => Boolean = _.external_references.get(0).external_id.getOrElse("") == id
+    findFilter(filter).headOption
   }
-
-  def typeFilter(stixType: String): StixObj => Boolean = _.`type` == stixType
-
 }
-
-
-

@@ -1,5 +1,5 @@
 package org.example.mitrestixserver
-package repository
+package storage
 
 import com.kodekutters.stix.Bundle
 import play.api.libs.json.Json
