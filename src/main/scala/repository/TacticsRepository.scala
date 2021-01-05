@@ -3,11 +3,10 @@ package repository
 
 import com.kodekutters.stix.CustomStix
 
+
 object TacticsRepository extends StixRepository {
 
   override type StixType = CustomStix
-
-  import service.MitreService.storage
 
   override def findAll(): Seq[StixType] = {
     storage.readAll().collect {

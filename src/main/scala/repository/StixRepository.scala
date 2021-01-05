@@ -8,6 +8,10 @@ trait StixRepository {
 
   type StixType <: SDO
 
+  protected val storage = service.MitreService.storage
+
+  def getMitreId(stixObj: StixType): String = stixObj.external_references.get(0).external_id.getOrElse("")
+
   def findAll(): Seq[StixType]
 
   def findFilter(filter: StixType => Boolean): Seq[StixType] = {
@@ -23,7 +27,13 @@ trait StixRepository {
   }
 
   def findByMitreId(id: String): Option[StixType] = {
-    val filter: StixType => Boolean = _.external_references.get(0).external_id.getOrElse("") == id
-    findFilter(filter).headOption
+    findFilter(getMitreId(_) == id).headOption
+  }
+
+  def add(stixObj: StixType): Option[StixType] = {
+    findByMitreId(getMitreId(stixObj)) match {
+      case Some(_) => None
+      case None => storage.create(stixObj).asInstanceOf[Option[StixType]]
+    }
   }
 }
