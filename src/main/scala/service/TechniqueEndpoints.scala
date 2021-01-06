@@ -41,6 +41,11 @@ object TechniqueEndpoints {
           case Left(message) => BadRequest(message.asJson)
         }
       } yield response
+
+    case DELETE -> Root / id => TechniquesRepository.delete(id) match {
+      case Right(entity) => Ok(entity.asJson)
+      case Left(message) => NotFound(message.asJson)
+    }
   }
 
 }

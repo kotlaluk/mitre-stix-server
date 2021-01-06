@@ -20,19 +20,22 @@ class InMemStixStorage(stixData: Bundle) extends StixStorage {
   def read(filter: StixObj => Boolean): Seq[StixObj] = stixData.objects.filter(filter).toSeq
 
   def update(stixObj: StixObj): Option[StixObj] = {
-    stixData.objects.find(_.id == stixObj.id) match {
+    delete(stixObj) match {
       case Some(obj) => {
-        stixData.objects -= obj
         create(stixObj)
       }
       case None => None
     }
   }
 
-  def delete(filter: StixObj => Boolean): Boolean = {
-    val toDelete = stixData.objects.filter(filter).toSeq
-    toDelete.foreach(stixData.objects -= _)
-    toDelete.nonEmpty
+  def delete(stixObj: StixObj): Option[StixObj] = {
+    stixData.objects.find(_.id == stixObj.id) match {
+      case Some(obj) => {
+        stixData.objects -= obj
+        Some(obj)
+      }
+      case None => None
+    }
   }
 
 }

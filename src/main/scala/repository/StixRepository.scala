@@ -54,4 +54,14 @@ trait StixRepository {
       case Left(message) => Left(message)
     }
   }
+
+  def delete(id: String): Either[StixError, StixType] = {
+    findByMitreId(id) match {
+      case Right(stixObj) => storage.delete(stixObj) match {
+        case Some(obj) => Right(obj.asInstanceOf[StixType])
+        case None => Left(new NotFoundError)
+      }
+      case Left(message) => Left(message)
+    }
+  }
 }

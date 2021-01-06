@@ -13,6 +13,6 @@ trait StixStorage {
 
   def update(stixObj: StixObj): Option[StixObj]
 
-  def delete(filter: StixObj => Boolean): Boolean
+  def delete(stixObj: StixObj): Option[StixObj]
 
 }

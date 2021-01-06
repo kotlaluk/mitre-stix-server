@@ -32,6 +32,11 @@ object TacticEndpoints {
           case Left(message) => Conflict(message.asJson)
         }
       } yield response
+
+    case DELETE -> Root / id => TacticsRepository.delete(id) match {
+      case Right(entity) => Ok(entity.asJson)
+      case Left(message) => NotFound(message.asJson)
+    }
   }
 
 }
