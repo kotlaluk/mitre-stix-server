@@ -20,16 +20,25 @@ object TechniqueEndpoints {
     case GET -> Root => Ok(TechniquesRepository.findAllCurrent().asJson)
 
     case GET -> Root / id => TechniquesRepository.findByMitreId(id) match {
-      case Some(entity) => Ok(entity.asJson)
-      case None => NotFound()
+      case Right(entity) => Ok(entity.asJson)
+      case Left(message) => NotFound(message.asJson)
     }
 
     case req @ POST -> Root =>
       for {
         stixObj <- req.as[StixType]
         response <- TechniquesRepository.add(stixObj) match {
-          case Some(entity) => Created(entity.asJson)
-          case None => Conflict("Object with the same ID or MITRE ID already exists!".asJson)
+          case Right(entity) => Created(entity.asJson)
+          case Left(message) => Conflict(message.asJson)
+        }
+      } yield response
+
+    case req @ PUT -> Root / id =>
+      for {
+        stixObj <- req.as[StixType]
+        response <- TechniquesRepository.update(id, stixObj) match {
+          case Right(entity) => Ok(entity.asJson)
+          case Left(message) => BadRequest(message.asJson)
         }
       } yield response
   }

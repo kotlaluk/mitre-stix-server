@@ -11,8 +11,8 @@ trait StixStorage {
 
   def read(filter: StixObj => Boolean): Seq[StixObj]
 
-  def update(stixObj: StixObj): Unit
+  def update(stixObj: StixObj): Option[StixObj]
 
-  def delete(filter: StixObj => Boolean): Unit
+  def delete(filter: StixObj => Boolean): Boolean
 
 }

@@ -20,16 +20,16 @@ object TacticEndpoints {
     case GET -> Root => Ok(TacticsRepository.findAllCurrent().asJson)
 
     case GET -> Root / id => TacticsRepository.findByMitreId(id) match {
-      case Some(entity) => Ok(entity.asJson)
-      case None => NotFound()
+      case Right(entity) => Ok(entity.asJson)
+      case Left(message) => NotFound(message.asJson)
     }
 
     case req @ POST -> Root =>
       for {
         stixObj <- req.as[StixType]
         response <- TacticsRepository.add(stixObj) match {
-          case Some(entity) => Created(entity.asJson)
-          case None => Conflict("Object with the same ID or MITRE ID already exists!".asJson)
+          case Right(entity) => Created(entity.asJson)
+          case Left(message) => Conflict(message.asJson)
         }
       } yield response
   }
