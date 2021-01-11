@@ -4,13 +4,13 @@ package repository
 import com.kodekutters.stix.Tool
 
 
-object SoftwareRepository extends StixRepository {
+object SoftwareRepository extends SDORepository {
 
-  override type StixType = Tool
+  override type SDOType = Tool
 
-  override def findAll(): Seq[StixType] = {
+  override def findAll(): Seq[SDOType] = {
     storage.readAll().collect {
-      case software: StixType => software
+      case software: SDOType => software
     }
   }
 }

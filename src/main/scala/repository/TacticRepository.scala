@@ -4,13 +4,13 @@ package repository
 import com.kodekutters.stix.CustomStix
 
 
-object TacticsRepository extends StixRepository {
+object TacticRepository extends SDORepository {
 
-  override type StixType = CustomStix
+  override type SDOType = CustomStix
 
-  override def findAll(): Seq[StixType] = {
+  override def findAll(): Seq[SDOType] = {
     storage.readAll().collect {
-      case tactic: StixType if (tactic.`type` == "x-mitre-tactic") => tactic
+      case tactic: SDOType if (tactic.`type` == "x-mitre-tactic") => tactic
     }
   }
 }

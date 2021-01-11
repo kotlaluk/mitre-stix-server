@@ -1,7 +1,7 @@
 package org.example.mitrestixserver
 package service
 
-import repository.TacticsRepository
+import repository.TacticRepository
 
 import cats.effect.IO
 import com.kodekutters.stix.CustomStix
@@ -14,27 +14,27 @@ import org.http4s.dsl.io._
 
 object TacticEndpoints {
 
-  type StixType = CustomStix
+  type SDOType = CustomStix
 
   val endpoints = HttpRoutes.of[IO] {
-    case GET -> Root => Ok(TacticsRepository.findAllCurrent().asJson)
+    case GET -> Root => Ok(TacticRepository.findAllCurrent().asJson)
 
-    case GET -> Root / id => TacticsRepository.findByMitreId(id) match {
-      case Right(entity) => Ok(entity.asJson)
+    case GET -> Root / id => TacticRepository.findByMitreId(id) match {
+      case Right(obj) => Ok(obj.asJson)
       case Left(message) => NotFound(message.asJson)
     }
 
     case req @ POST -> Root =>
       for {
-        stixObj <- req.as[StixType]
-        response <- TacticsRepository.add(stixObj) match {
-          case Right(entity) => Created(entity.asJson)
+        sdo <- req.as[SDOType]
+        response <- TacticRepository.add(sdo) match {
+          case Right(obj) => Created(obj.asJson)
           case Left(message) => Conflict(message.asJson)
         }
       } yield response
 
-    case DELETE -> Root / id => TacticsRepository.delete(id) match {
-      case Right(entity) => Ok(entity.asJson)
+    case DELETE -> Root / id => TacticRepository.delete(id) match {
+      case Right(obj) => Ok(obj.asJson)
       case Left(message) => NotFound(message.asJson)
     }
   }

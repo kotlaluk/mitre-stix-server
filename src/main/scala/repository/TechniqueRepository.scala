@@ -4,13 +4,13 @@ package repository
 import com.kodekutters.stix.AttackPattern
 
 
-object TechniquesRepository extends StixRepository {
+object TechniqueRepository extends SDORepository {
 
-  override type StixType = AttackPattern
+  override type SDOType = AttackPattern
 
-  override def findAll(): Seq[StixType] = {
+  override def findAll(): Seq[SDOType] = {
     storage.readAll().collect {
-      case technique: StixType => technique
+      case technique: SDOType => technique
     }
   }
 }

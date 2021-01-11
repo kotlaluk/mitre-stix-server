@@ -15,7 +15,8 @@ object MitreService {
 
   val routes = Router(
     "/techniques" -> TechniqueEndpoints.endpoints,
-    "/tactics" -> TacticEndpoints.endpoints
+    "/tactics" -> TacticEndpoints.endpoints,
+    "/software" -> SoftwareEndpoints.endpoints
   ).orNotFound
 
 }
