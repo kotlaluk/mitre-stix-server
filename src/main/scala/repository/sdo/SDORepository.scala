@@ -1,16 +1,15 @@
 package org.example.mitrestixserver
-package repository
+package repository.sdo
+
+import repository._
 
 import com.kodekutters.stix.SDO
 
-
-trait SDORepository {
+trait SDORepository extends MitreRepository {
 
   type SDOType <: SDO
 
-  protected val storage = service.MitreService.storage
-
-  def getMitreId(sdo: SDOType): String = sdo.external_references.get(0).external_id.getOrElse("")
+  private def getMitreId(sdo: SDOType): String = sdo.external_references.get(0).external_id.getOrElse("")
 
   def findAll(): Seq[SDOType]
 
@@ -21,7 +20,7 @@ trait SDORepository {
   def findAllCurrent(): Seq[SDOType] = {
     val filter: SDOType => Boolean = sdo => {
       val customProps = sdo.custom.get
-      ! (sdo.revoked.getOrElse(false) || customProps.nodes.contains("x_mitre_deprecated"))
+      !(sdo.revoked.getOrElse(false) || customProps.nodes.contains("x_mitre_deprecated"))
     }
     findByFilter(filter)
   }

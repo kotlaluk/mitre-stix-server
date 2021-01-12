@@ -1,8 +1,7 @@
 package org.example.mitrestixserver
-package repository
+package repository.sdo
 
 import com.kodekutters.stix.Tool
-
 
 object SoftwareRepository extends SDORepository {
 

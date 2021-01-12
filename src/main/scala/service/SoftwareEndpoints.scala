@@ -1,12 +1,11 @@
 package org.example.mitrestixserver
 package service
 
-import repository.SoftwareRepository
-
 import cats.effect.IO
 import com.kodekutters.stix.Tool
 import io.circe.generic.auto._
 import io.circe.syntax._
+import org.example.mitrestixserver.repository.sdo.SoftwareRepository
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.io._

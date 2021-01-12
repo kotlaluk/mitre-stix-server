@@ -1,12 +1,11 @@
 package org.example.mitrestixserver
 package service
 
-import repository.TacticRepository
-
 import cats.effect.IO
 import com.kodekutters.stix.CustomStix
 import io.circe.generic.auto._
 import io.circe.syntax._
+import org.example.mitrestixserver.repository.sdo.TacticRepository
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.io._
