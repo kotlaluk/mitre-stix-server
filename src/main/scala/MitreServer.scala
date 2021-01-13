@@ -13,7 +13,7 @@ object MitreServer extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO](global)
       .bindHttp(8080, "localhost")
-      .withHttpApp(MitreService.routes)
+      .withHttpApp(MitreService.mainRouter)
       .serve
       .compile
       .drain

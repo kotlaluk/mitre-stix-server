@@ -1,15 +1,15 @@
 package org.example.mitrestixserver
-package service
+package service.api
+
+import repository.sdo.TacticRepository
 
 import cats.effect.IO
 import com.kodekutters.stix.CustomStix
+import org.http4s.HttpRoutes
 import io.circe.generic.auto._
 import io.circe.syntax._
-import org.example.mitrestixserver.repository.sdo.TacticRepository
-import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.io._
-
 
 object TacticEndpoints {
 
@@ -23,7 +23,7 @@ object TacticEndpoints {
       case Left(message) => NotFound(message.asJson)
     }
 
-    case req @ POST -> Root =>
+    case req@POST -> Root =>
       for {
         sdo <- req.as[SDOType]
         response <- TacticRepository.add(sdo) match {
