@@ -1,12 +1,15 @@
 package org.example.mitrestixserver
 package service.view
 
+import repository.MitreError
 import repository.sdo.{TacticRepository, TechniqueRepository}
 
 import play.api.libs.json.JsPath
 
 
 case class ListItem(id: String, name: String, link: String)
+
+case class DetailItem(id: String, name: String, description: String)
 
 
 object ViewGenerator {
@@ -37,5 +40,10 @@ object ViewGenerator {
     })
   }
 
-  def detailView(): Unit = ???
+  def detailView(id: String): Either[MitreError, DetailItem] = {
+    TechniqueRepository.findByMitreId(id) match {
+      case Left(error) => Left(error)
+      case Right(sdo) => Right(DetailItem(id, sdo.name, sdo.description.getOrElse("")))
+    }
+  }
 }

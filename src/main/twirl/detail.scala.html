@@ -1,14 +1,13 @@
-@()
+@import html.main
+@import org.example.mitrestixserver.service.view.DetailItem
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>MITRE Server</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    </head>
-    <body>
+@(title: String, item: DetailItem)
 
-        <h1 class="w3-center">MITRE Server</h1>
+@main(title) {
+    <div class="w3-container w3-auto">
+        <h2>@item.id - @item.name</h2>
 
-    </body>
-</html>
+        <h3>Description</h3>
+        <p>@item.description</p>
+    </div>
+}

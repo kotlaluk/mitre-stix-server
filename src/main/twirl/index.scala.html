@@ -1,31 +1,24 @@
+@import html.main
 @import org.example.mitrestixserver.service.view.ListItem
 
 @(content: Seq[(String, Seq[ListItem])])
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>MITRE Server</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    </head>
-    <body>
-
-        <h1 class="w3-center">MITRE Server</h1>
-
-        <table class="w3-table-all">
+@main("ATT&CK Matrix") {
+    <div class="w3-padding-small" style="overflow: auto">
+        <table class="w3-table w3-bordered w3-striped w3-centered">
             <tr>
                 @for(tactic <- content) {
-                    <td>
+                    <td style="padding: 0">
                         <table class="w3-hoverable">
                             <thead class="w3-centered">
                                 <tr class="w3-red">
                                     <th>@tactic._1</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="font-size: smaller">
                                 @for(technique <- tactic._2) {
                                     <tr>
-                                        <td><a href=@technique.link class="w3-bar-item w3-button">@technique.id - @technique.name</a></td>
+                                        <td style="padding: 0"><a href=@technique.link class="w3-bar-item w3-button" style="white-space: normal">@technique.name</a></td>
                                     </tr>
                                 }
                             </tbody>
@@ -34,7 +27,6 @@
                 }
             </tr>
         </table>
-
-    </body>
-</html>
+    </div>
+}
 

@@ -13,8 +13,11 @@ object ViewEndpoints {
 
   val endpoints: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => Ok(html.index(indexView))
-    case GET -> Root / "techniques" => Ok(html.list(listView()))
-    case GET -> Root / "techniques" / id => Ok(html.detail())
+    case GET -> Root / "techniques" => Ok(html.list("Techniques", listView()))
+    case GET -> Root / "techniques" / id => detailView(id) match {
+      case Right(detail) => Ok(html.detail("Technique Detail", detail))
+      case Left(message) => NotFound(message.message)
+    }
   }
 
 }

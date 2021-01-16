@@ -1,22 +1,14 @@
+@import html.main
 @import org.example.mitrestixserver.service.view.ListItem
 
-@(content: Seq[ListItem])
+@(title: String, content: Seq[ListItem])
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>MITRE Server</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    </head>
-    <body>
-
-        <h1 class="w3-center">MITRE Server</h1>
-
+@main(title) {
+    <div class="w3-container w3-auto">
         <ul class="w3-ul w3-hoverable">
-        @for(technique <- content) {
-            <li><a href=@technique.link class="w3-bar-item w3-button">@technique.id - @technique.name</a></li>
+        @for(item <- content) {
+            <li><a href=@item.link class="w3-bar-item w3-button">@item.id - @item.name</a></li>
         }
         </ul>
-
-    </body>
-</html>
+    </div>
+}
