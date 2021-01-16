@@ -1,6 +1,8 @@
 package org.example.mitrestixserver
 package repository.sdo
 
+import utils.SDOUtils
+
 import com.kodekutters.stix.AttackPattern
 import play.api.libs.json._
 
@@ -14,8 +16,9 @@ object TechniqueRepository extends SDORepository {
     }
   }
 
-  def findCurrentWithoutSub(): Seq[SDOType] = {
-    findAllCurrent().filter(! getCustomProperty[Boolean](_, "x_mitre_is_subtechnique", JsPath.read[Boolean])
-                              .getOrElse(false))
+  def findCurrentWithoutSubtechniques(): Seq[SDOType] = {
+    findAllCurrent().filter(
+      ! _.getCustomProperty[Boolean]("x_mitre_is_subtechnique", JsPath.read[Boolean]).getOrElse(false)
+    )
   }
 }

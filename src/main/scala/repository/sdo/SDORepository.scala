@@ -2,23 +2,13 @@ package org.example.mitrestixserver
 package repository.sdo
 
 import repository._
+import utils.SDOUtils
 
-import com.kodekutters.stix.SDO
-import play.api.libs.json._
+import com.kodekutters.stix.{Identifier, SDO}
 
 trait SDORepository extends MitreRepository {
 
   type SDOType <: SDO
-
-  private def getMitreId(sdo: SDOType): String = sdo.external_references.get(0).external_id.getOrElse("")
-
-  def getCustomProperty[T](sdo: SDOType, property: String, reads: Reads[T]): Option[T] = {
-//    val reads = Json.using[Json.WithDefaultValues].reads[T]
-    sdo.custom match {
-      case Some(customProps) => customProps.nodes(property).asOpt[T](reads)
-      case _ => None
-    }
-  }
 
   def findAll(): Seq[SDOType]
 
@@ -30,15 +20,22 @@ trait SDORepository extends MitreRepository {
     findAll().filter(filter)
   }
 
+  def findById(id: Identifier): Either[MitreError, SDOType] = {
+    findAll().find(_.id == id) match {
+      case Some(sdo) => Right(sdo.asInstanceOf[SDOType])
+      case None => Left(new NotFoundError)
+    }
+  }
+
   def findByMitreId(id: String): Either[MitreError, SDOType] = {
-    findAll().find(getMitreId(_) == id) match {
+    findAll().find(_.mitreId == id) match {
       case Some(sdo) => Right(sdo)
       case None => Left(new NotFoundError)
     }
   }
 
   def add(sdo: SDOType): Either[MitreError, SDOType] = {
-    findByMitreId(getMitreId(sdo)) match {
+    findByMitreId(sdo.mitreId) match {
       case Right(_) => Left(new ConflictError)
       case Left(_) => storage.create(sdo) match {
         case Some(obj) => Right(obj.asInstanceOf[SDOType])
@@ -48,7 +45,7 @@ trait SDORepository extends MitreRepository {
   }
 
   def update(id: String, sdo: SDOType): Either[MitreError, SDOType] = {
-    if (id != getMitreId(sdo))
+    if (id != sdo.mitreId)
       return Left(new MismatchError)
     findByMitreId(id) match {
       case Right(_) => storage.update(sdo) match {

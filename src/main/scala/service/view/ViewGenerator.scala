@@ -2,48 +2,52 @@ package org.example.mitrestixserver
 package service.view
 
 import repository.MitreError
-import repository.sdo.{TacticRepository, TechniqueRepository}
+import repository.sdo.{SoftwareRepository, TacticRepository, TechniqueRepository}
+import repository.sro.RelationshipRepository
+import utils.SDOUtils
 
 import play.api.libs.json.JsPath
 
 
-case class ListItem(id: String, name: String, link: String)
+case class ListItem(mitreId: String, name: String, link: String)
 
-case class DetailItem(id: String, name: String, description: String)
+case class DetailItem(mitreId: String, name: String, subtechniques: Seq[String], description: String, detection: String, relations: Seq[String])
 
 
 object ViewGenerator {
 
-  private def createLink(endpoint: String, id: String = "") = {
-    s"http://127.0.0.1:8080/$endpoint/$id"
-  }
-
   val indexView: Seq[(String, Seq[ListItem])] = {
     TacticRepository.findAllCurrent().map(tactic => {
-      val killChainPhase = TacticRepository.getCustomProperty[String](tactic, "x_mitre_shortname", JsPath.read[String]).getOrElse("Undefined")
-      val listItems = TechniqueRepository.findCurrentWithoutSub().filter(_.kill_chain_phases.getOrElse(List()).exists(_.phase_name == killChainPhase)).map(sdo => {
-        sdo.external_references.get(0).external_id match {
-          case Some(mitreId) => ListItem(mitreId, sdo.name, createLink("techniques", mitreId))
-          case None => ListItem("T0000", sdo.name, createLink("techniques"))
-        }
-      })
+      val killChainPhase = tactic.getCustomProperty[String]("x_mitre_shortname", JsPath.read[String]).getOrElse("Undefined")
+      val listItems = TechniqueRepository.findCurrentWithoutSubtechniques().filter(_.kill_chain_phases.getOrElse(List()).exists(_.phase_name == killChainPhase)).map(sdo =>
+        ListItem(sdo.mitreId, sdo.name, s"/techniques/${sdo.mitreId}")
+      )
       Tuple2(killChainPhase, listItems)
     })
   }
 
   def listView(): Seq[ListItem] = {
-    TechniqueRepository.findCurrentWithoutSub().map(sdo => {
-      sdo.external_references.get(0).external_id match {
-        case Some(mitreId) => ListItem(mitreId, sdo.name, createLink("techniques", mitreId))
-        case None => ListItem("T0000", sdo.name, createLink("techniques"))
-      }
-    })
+    TechniqueRepository.findCurrentWithoutSubtechniques().map(sdo => ListItem(sdo.mitreId, sdo.name, s"/techniques/${sdo.mitreId}"))
   }
 
   def detailView(id: String): Either[MitreError, DetailItem] = {
     TechniqueRepository.findByMitreId(id) match {
       case Left(error) => Left(error)
-      case Right(sdo) => Right(DetailItem(id, sdo.name, sdo.description.getOrElse("")))
+      case Right(technique) => {
+        val description = technique.description.getOrElse("")
+        val detection = technique.getCustomProperty("x_mitre_detection", JsPath.read[String]).getOrElse("")
+        val software = RelationshipRepository.findUsedBy(technique).collect(rel =>
+          SoftwareRepository.findById(rel.source_ref) match {
+            case Right(sw) => sw.name
+          }
+        )
+        val subtechniques = RelationshipRepository.findSubtechniques(technique).collect(rel =>
+          TechniqueRepository.findById(rel.source_ref) match {
+            case Right(subtechnique) => subtechnique.name
+          }
+        )
+        Right(DetailItem(id, technique.name, subtechniques, description, detection, software))
+      }
     }
   }
 }

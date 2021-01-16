@@ -13,14 +13,23 @@ object RelationshipRepository extends SRORepository {
     }
   }
 
-  //TODO: generic function src-rel-target
-  def findByType(rel_type: String)(src: SDO): Seq[SROType] = {
+  def findBySource(rel_type: String)(source: SDO): Seq[SROType] = {
     val filter: SROType => Boolean = sro => {
-      sro.relationship_type == rel_type && sro.source_ref == src.id
+      sro.relationship_type == rel_type && sro.source_ref == source.id
     }
     findByFilter(filter)
   }
 
-  val findUses: SDO => Seq[SROType] = findByType("uses")
+  def findByTarget(rel_type: String)(target: SDO): Seq[SROType] = {
+    val filter: SROType => Boolean = sro => {
+      sro.relationship_type == rel_type && sro.target_ref == target.id
+    }
+    findByFilter(filter)
+  }
+
+  val findUses: SDO => Seq[SROType] = findBySource("uses")
+  val findUsedBy: SDO => Seq[SROType] = findByTarget("uses")
+  val findSubtechniques: SDO => Seq[SROType] = findByTarget("subtechnique-of")
+  val findSubtechniqueOf: SDO => Seq[SROType] = findBySource("subtechnique-of")
 
 }
