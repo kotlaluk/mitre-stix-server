@@ -4,6 +4,7 @@ package repository.sdo
 import repository._
 
 import com.kodekutters.stix.SDO
+import play.api.libs.json._
 
 trait SDORepository extends MitreRepository {
 
@@ -11,22 +12,26 @@ trait SDORepository extends MitreRepository {
 
   private def getMitreId(sdo: SDOType): String = sdo.external_references.get(0).external_id.getOrElse("")
 
-  def findAll(): Seq[SDOType]
-
-  def findByFilter(filter: SDOType => Boolean): Seq[SDOType] = {
-    findAll().filter(filter)
+  def getCustomProperty[T](sdo: SDOType, property: String, reads: Reads[T]): Option[T] = {
+//    val reads = Json.using[Json.WithDefaultValues].reads[T]
+    sdo.custom match {
+      case Some(customProps) => customProps.nodes(property).asOpt[T](reads)
+      case _ => None
+    }
   }
+
+  def findAll(): Seq[SDOType]
 
   def findAllCurrent(): Seq[SDOType] = {
     val filter: SDOType => Boolean = sdo => {
       val customProps = sdo.custom.get
       !(sdo.revoked.getOrElse(false) || customProps.nodes.contains("x_mitre_deprecated"))
     }
-    findByFilter(filter)
+    findAll().filter(filter)
   }
 
   def findByMitreId(id: String): Either[MitreError, SDOType] = {
-    findByFilter(getMitreId(_) == id).headOption match {
+    findAll().find(getMitreId(_) == id) match {
       case Some(sdo) => Right(sdo)
       case None => Left(new NotFoundError)
     }

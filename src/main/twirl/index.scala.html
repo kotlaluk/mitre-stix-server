@@ -1,4 +1,6 @@
-@(content: Map[String, List[String]])
+@import org.example.mitrestixserver.service.view.ListItem
+
+@(content: Seq[(String, Seq[ListItem])])
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,24 +8,24 @@
         <title>MITRE Server</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
-    <body class="w3-container w3-auto">
+    <body>
 
-        <h1>MITRE Server</h1>
+        <h1 class="w3-center">MITRE Server</h1>
 
         <table class="w3-table-all">
             <tr>
                 @for(tactic <- content) {
                     <td>
-                        <table>
-                            <thead>
-                                <tr class="w3-light-grey">
+                        <table class="w3-hoverable">
+                            <thead class="w3-centered">
+                                <tr class="w3-red">
                                     <th>@tactic._1</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @for(technique <- tactic._2) {
                                     <tr>
-                                        <td>@technique</td>
+                                        <td><a href=@technique.link class="w3-bar-item w3-button">@technique.id - @technique.name</a></td>
                                     </tr>
                                 }
                             </tbody>
