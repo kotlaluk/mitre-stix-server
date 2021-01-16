@@ -2,7 +2,7 @@ package org.example.mitrestixserver
 package service
 
 import service.api.{SoftwareEndpoints, TacticEndpoints, TechniqueEndpoints}
-import service.view.ViewEndpoints
+import service.view.{IndexView, SoftwareView, TechniqueView}
 import storage.{FileLoader, InMemStixStorage}
 
 import com.kodekutters.stix.Bundle
@@ -16,7 +16,9 @@ object MitreService {
   implicit val storage = new InMemStixStorage(loader.load().getOrElse(new Bundle()))
 
   val mainRouter = Router(
-    "/" -> ViewEndpoints.endpoints,
+    "/" -> IndexView.endpoints,
+    "/techniques" -> TechniqueView.endpoints,
+    "/software" -> SoftwareView.endpoints,
     "/api/techniques" -> TechniqueEndpoints.endpoints,
     "/api/tactics" -> TacticEndpoints.endpoints,
     "/api/software" -> SoftwareEndpoints.endpoints
