@@ -2,7 +2,7 @@ package org.example.mitrestixserver
 package service.view
 
 import repository.MitreError
-import repository.sdo.{SoftwareRepository, TechniqueRepository}
+import repository.sdo.{GroupRepository, SoftwareRepository, TechniqueRepository}
 import repository.sro.RelationshipRepository
 import utils.SDOUtils
 
@@ -31,13 +31,20 @@ object TechniqueView extends ViewEndpoints {
             case Right(sw) => ListItem(sw.mitreId, sw.name, s"/software/${sw.mitreId}")
           }
         )
+        val groups = RelationshipRepository.findUsedBy(technique).collect(rel =>
+          GroupRepository.findById(rel.source_ref) match {
+            case Right(group) => ListItem(group.mitreId, group.name, s"/groups/${group.mitreId}")
+          }
+        )
         val subtechniques = RelationshipRepository.findSubtechniques(technique).collect(rel =>
           TechniqueRepository.findById(rel.source_ref) match {
             case Right(subtechnique) => ListItem(subtechnique.mitreId, subtechnique.name, s"/${endpoint}/${subtechnique.mitreId}")
           }
         )
         val stringProps = Map("Description" -> description, "Detection" -> detection)
-        val listProps = Map("Subtechniques" -> subtechniques.sortBy(_.mitreId), "Used by software" -> software.sortBy(_.mitreId))
+        val listProps = Map("Subtechniques" -> subtechniques.sortBy(_.mitreId),
+                            "Used by software" -> software.sortBy(_.mitreId),
+                            "Used by groups" -> groups.sortBy(_.mitreId))
         Right(DetailItem("Technique Detail", id, technique.name, stringProps, listProps))
       }
     }

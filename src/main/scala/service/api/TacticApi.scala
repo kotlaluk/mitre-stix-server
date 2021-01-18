@@ -11,7 +11,7 @@ import io.circe.syntax._
 import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 import org.http4s.dsl.io._
 
-object TacticEndpoints {
+object TacticApi {
 
   type SDOType = CustomStix
 
