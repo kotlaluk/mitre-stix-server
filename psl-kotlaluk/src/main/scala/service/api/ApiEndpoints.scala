@@ -1,7 +1,7 @@
 package org.example.mitrestixserver
 package service.api
 
-import repository.sdo.SDORepository
+import repository.sdo.{SDORepository, SDORepository2}
 
 import cats.effect.IO
 import com.kodekutters.stix.SDO
@@ -12,7 +12,7 @@ import org.http4s.dsl.io._
 import org.http4s.{EntityDecoder, HttpRoutes}
 
 class ApiEndpoints[SDOType <: SDO](
-    repo: SDORepository[SDOType],
+    repo: SDORepository2[SDOType],
   )(implicit encoder: io.circe.Encoder[SDOType], decoder: EntityDecoder[cats.effect.IO, SDOType]) {
   
   val endpoints: HttpRoutes[IO] = HttpRoutes.of[IO] {
@@ -52,7 +52,7 @@ class ApiEndpoints[SDOType <: SDO](
 object ApiEndpoints {
   
   def apply[SDOType <: SDO](
-    implicit repo: SDORepository[SDOType],
+    implicit repo: SDORepository2[SDOType],
     encoder: io.circe.Encoder[SDOType],
     decoder: EntityDecoder[cats.effect.IO, SDOType],
   ) = new ApiEndpoints(repo)

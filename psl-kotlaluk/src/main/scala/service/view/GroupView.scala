@@ -7,19 +7,19 @@ import repository.sro.RelationshipRepository
 import utils.SDOUtils
 
 
-object GroupView extends ViewEndpoints {
+class GroupView(repo: GroupRepository) extends ViewEndpoints {
 
   override val endpoint: String = "groups"
 
   val listView: (String, Seq[ListItem]) = {
-    val list = GroupRepository.findAllCurrent().sortBy(_.mitreId).map(
+    val list = repo.findAllCurrent().sortBy(_.mitreId).map(
       sdo => ListItem(sdo.mitreId, sdo.name, s"/${endpoint}/${sdo.mitreId}")
     )
     ("Groups", list)
   }
 
   def detailView(id: String): Either[MitreError, DetailItem] = {
-    GroupRepository.findByMitreId(id) match {
+    repo.findByMitreId(id) match {
       case Left(error) => Left(error)
       case Right(group) => {
         val description = group.description.getOrElse("")
@@ -34,4 +34,8 @@ object GroupView extends ViewEndpoints {
       }
     }
   }
+}
+
+object GroupView {
+  def apply(implicit repo: GroupRepository): GroupView = new GroupView(repo)
 }

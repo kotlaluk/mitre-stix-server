@@ -1,30 +1,24 @@
 package org.example.mitrestixserver
 package service
 
+import repository.sdo.Repositories
 import service.api._
 import service.view._
-import storage.{FileLoader, InMemStixStorage}
+import storage.StixStorage
 
 import com.kodekutters.stix.IntrusionSet
-import org.example.mitrestixserver.repository.sdo.GroupRepository
+import io.circe.generic.auto._
+import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.server.Router
-import io.circe.generic.auto._
-import io.circe.syntax._
-import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
 
-object MitreService {
-
-  val file = "data/enterprise-attack.json"
-  implicit val storage = new InMemStixStorage(new FileLoader(file).load())
-
-  implicit val repo = GroupRepository
+class MitreService(implicit storage: StixStorage) extends Repositories {
 
   val mainRouter = Router(
     "/" -> IndexView.endpoints,
-    "/techniques" -> TechniqueView.endpoints,
+    "/techniques" -> TechniqueView.apply.endpoints,
     "/software" -> SoftwareView.endpoints,
-    "/groups" -> GroupView.endpoints,
+    "/groups" -> GroupView.apply.endpoints,
     "/mitigations" -> MitigationView.endpoints,
     "/api/tactics" -> TacticApi.endpoints,
     "/api/techniques" -> TechniqueApi.endpoints,

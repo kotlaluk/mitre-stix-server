@@ -9,7 +9,7 @@ import utils.SDOUtils
 import play.api.libs.json.JsPath
 
 
-object TechniqueView extends ViewEndpoints {
+class TechniqueView(groupRepository: GroupRepository) extends ViewEndpoints {
 
   override val endpoint: String = "techniques"
 
@@ -32,7 +32,7 @@ object TechniqueView extends ViewEndpoints {
           }
         )
         val groups = RelationshipRepository.findUsedBy(technique).collect(rel =>
-          GroupRepository.findById(rel.source_ref) match {
+          groupRepository.findById(rel.source_ref) match {
             case Right(group) => ListItem(group.mitreId, group.name, s"/groups/${group.mitreId}")
           }
         )
@@ -62,4 +62,8 @@ object TechniqueView extends ViewEndpoints {
       }
     }
   }
+}
+
+object TechniqueView {
+  def apply(implicit groupRepository: GroupRepository): TechniqueView = new TechniqueView(groupRepository)
 }

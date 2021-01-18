@@ -2,9 +2,10 @@ package org.example.mitrestixserver
 package repository.sdo
 
 import com.kodekutters.stix.IntrusionSet
+import org.example.mitrestixserver.storage.StixStorage
 
 
-object GroupRepository extends SDORepository[IntrusionSet] {
+class GroupRepository(protected val storage: StixStorage) extends SDORepository2[IntrusionSet] {
 
   //  override type SDOType = IntrusionSet
   type SDOType = IntrusionSet
