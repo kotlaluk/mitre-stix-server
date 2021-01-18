@@ -7,8 +7,10 @@
     <div class="w3-container w3-auto">
         <h2>@item.mitreId - @item.name</h2>
         @for((title, text) <- item.stringProps) {
-            <h3>@title</h3>
-            <p>@text</p>
+            @if(text.nonEmpty) {
+                <h3>@title</h3>
+                <p>@text</p>
+            }
         }
         @for((title, list) <- item.listProps) {
             @if(list.nonEmpty) {

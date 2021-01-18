@@ -2,7 +2,7 @@ package org.example.mitrestixserver
 package service.view
 
 import repository.MitreError
-import repository.sdo.{GroupRepository, SoftwareRepository, TechniqueRepository}
+import repository.sdo.{GroupRepository, MitigationRepository, SoftwareRepository, TechniqueRepository}
 import repository.sro.RelationshipRepository
 import utils.SDOUtils
 
@@ -41,8 +41,21 @@ object TechniqueView extends ViewEndpoints {
             case Right(subtechnique) => ListItem(subtechnique.mitreId, subtechnique.name, s"/${endpoint}/${subtechnique.mitreId}")
           }
         )
-        val stringProps = Map("Description" -> description, "Detection" -> detection)
-        val listProps = Map("Subtechniques" -> subtechniques.sortBy(_.mitreId),
+        val subtechniqueOf = RelationshipRepository.findSubtechniqueOf(technique).collect(rel =>
+          TechniqueRepository.findById(rel.target_ref) match {
+            case Right(technique) => ListItem(technique.mitreId, technique.name, s"/${endpoint}/${technique.mitreId}")
+          }
+        )
+        val mitigatedBy = RelationshipRepository.findMitigatedBy(technique).collect(rel =>
+          MitigationRepository.findById(rel.source_ref) match {
+            case Right(mitigation) => ListItem(mitigation.mitreId, mitigation.name, s"/mitigations/${mitigation.mitreId}")
+          }
+        )
+        val stringProps = Map("Description" -> beautify(description),
+                              "Detection" -> beautify(detection))
+        val listProps = Map("Subtechnique of" -> subtechniqueOf.sortBy(_.mitreId),
+                            "Subtechniques" -> subtechniques.sortBy(_.mitreId),
+                            "Mitigations" -> mitigatedBy.sortBy(_.mitreId),
                             "Used by software" -> software.sortBy(_.mitreId),
                             "Used by groups" -> groups.sortBy(_.mitreId))
         Right(DetailItem("Technique Detail", id, technique.name, stringProps, listProps))

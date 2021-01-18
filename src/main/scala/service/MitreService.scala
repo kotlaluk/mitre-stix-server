@@ -1,8 +1,8 @@
 package org.example.mitrestixserver
 package service
 
-import service.api.{GroupApi, SoftwareApi, TacticApi, TechniqueApi}
-import service.view.{GroupView, IndexView, SoftwareView, TechniqueView}
+import service.api.{GroupApi, MitigationApi, SoftwareApi, TacticApi, TechniqueApi}
+import service.view.{GroupView, IndexView, MitigationView, SoftwareView, TechniqueView}
 import storage.{FileLoader, InMemStixStorage}
 
 import com.kodekutters.stix.Bundle
@@ -20,10 +20,12 @@ object MitreService {
     "/techniques" -> TechniqueView.endpoints,
     "/software" -> SoftwareView.endpoints,
     "/groups" -> GroupView.endpoints,
+    "/mitigations" -> MitigationView.endpoints,
     "/api/tactics" -> TacticApi.endpoints,
     "/api/techniques" -> TechniqueApi.endpoints,
     "/api/software" -> SoftwareApi.endpoints,
-    "/api/groups" -> GroupApi.endpoints
+    "/api/groups" -> GroupApi.endpoints,
+    "/api/mitigations" -> MitigationApi.endpoints
   ).orNotFound
 
 }

@@ -25,4 +25,11 @@ trait ViewEndpoints {
     }
   }
 
+  def beautify(s: String): String = {
+    val patternLink = "\\[([^\\[\\]]+)\\](\\([^\\(\\)]+\\))".r
+    val patternCitation = "\\(Citation: [^\\)]+\\)".r
+    val s1 = patternLink.replaceAllIn(s, "$1")
+    patternCitation.replaceAllIn(s1, "")
+  }
+
 }

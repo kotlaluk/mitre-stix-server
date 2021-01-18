@@ -31,5 +31,7 @@ object RelationshipRepository extends SRORepository {
   val findUsedBy: SDO => Seq[SROType] = findByTarget("uses")
   val findSubtechniques: SDO => Seq[SROType] = findByTarget("subtechnique-of")
   val findSubtechniqueOf: SDO => Seq[SROType] = findBySource("subtechnique-of")
+  val findMitigates: SDO => Seq[SROType] = findBySource("mitigates")
+  val findMitigatedBy: SDO => Seq[SROType] = findByTarget("mitigates")
 
 }

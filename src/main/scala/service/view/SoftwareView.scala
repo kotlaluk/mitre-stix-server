@@ -25,10 +25,10 @@ object SoftwareView extends ViewEndpoints {
         val description = sw.description.getOrElse("")
         val techniques = RelationshipRepository.findUses(sw).collect(rel =>
           TechniqueRepository.findById(rel.target_ref) match {
-            case Right(sw) => ListItem(sw.mitreId, sw.name, s"/techniques/${sw.mitreId}")
+            case Right(technique) => ListItem(technique.mitreId, technique.name, s"/techniques/${technique.mitreId}")
           }
         )
-        val stringProps = Map("Description" -> description)
+        val stringProps = Map("Description" -> beautify(description))
         val listProps = Map("Used in techniques" -> techniques.sortBy(_.mitreId))
         Right(DetailItem("Software Detail", id, sw.name, stringProps, listProps))
       }
