@@ -20,10 +20,11 @@ object IndexView {
   val view: Seq[(String, Seq[ListItem])] = {
     TacticRepository.findAllCurrent().map(tactic => {
       val killChainPhase = tactic.getCustomProperty[String]("x_mitre_shortname", JsPath.read[String]).getOrElse("Undefined")
-      val listItems = TechniqueRepository.findCurrentWithoutSubtechniques().filter(_.kill_chain_phases.getOrElse(List()).exists(_.phase_name == killChainPhase)).map(sdo =>
-        ListItem(sdo.mitreId, sdo.name, s"/techniques/${sdo.mitreId}")
-      )
-      Tuple2(killChainPhase, listItems)
+      val listItems = TechniqueRepository.findCurrentWithoutSubtechniques().filter(_.kill_chain_phases.getOrElse(List())
+        .exists(_.phase_name == killChainPhase)).map(sdo =>
+          ListItem(sdo.mitreId, sdo.name, s"/techniques/${sdo.mitreId}")
+        )
+      (killChainPhase, listItems)
     })
   }
 

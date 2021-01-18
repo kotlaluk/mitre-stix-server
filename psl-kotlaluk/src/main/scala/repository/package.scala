@@ -15,7 +15,10 @@ package object utils {
     def getCustomProperty[T](property: String, reads: Reads[T]): Option[T] = {
 //      val reads = Json.using[Json.WithDefaultValues].reads[T]
       sdo.custom match {
-        case Some(customProps) => customProps.nodes(property).asOpt[T](reads)
+        case Some(customProps) => customProps.nodes.get(property) match {
+          case Some(value) => value.asOpt[T](reads)
+          case _ => None
+        }
         case _ => None
       }
     }

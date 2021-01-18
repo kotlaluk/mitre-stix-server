@@ -1,19 +1,18 @@
 package org.example.mitrestixserver
 package service
 
-import service.api.{GroupApi, MitigationApi, SoftwareApi, TacticApi, TechniqueApi}
-import service.view.{GroupView, IndexView, MitigationView, SoftwareView, TechniqueView}
+import service.api._
+import service.view._
 import storage.{FileLoader, InMemStixStorage}
 
-import com.kodekutters.stix.Bundle
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.server.Router
 
 
 object MitreService {
 
-  val loader = new FileLoader("enterprise-attack.json")
-  implicit val storage = new InMemStixStorage(loader.load().getOrElse(new Bundle()))
+  val file = "data/enterprise-attack.json"
+  implicit val storage = new InMemStixStorage(new FileLoader(file).load())
 
   val mainRouter = Router(
     "/" -> IndexView.endpoints,
