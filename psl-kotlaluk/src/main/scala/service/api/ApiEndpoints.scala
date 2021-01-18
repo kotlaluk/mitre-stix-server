@@ -1,24 +1,24 @@
 package org.example.mitrestixserver
 package service.api
 
-import repository.sdo.GroupRepository
+import repository.sdo.SDORepository
 
 import cats.effect.IO
-import com.kodekutters.stix.IntrusionSet
+import com.kodekutters.stix.SDO
 import io.circe.generic.auto._
 import io.circe.syntax._
-import org.http4s.HttpRoutes
-import org.http4s.circe.CirceEntityCodec.{circeEntityDecoder, circeEntityEncoder}
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.io._
+import org.http4s.{EntityDecoder, HttpRoutes}
 
-object GroupApi {
-
-  type SDOType = IntrusionSet
-
+class ApiEndpoints[SDOType <: SDO](
+    repo: SDORepository[SDOType],
+  )(implicit encoder: io.circe.Encoder[SDOType], decoder: EntityDecoder[cats.effect.IO, SDOType]) {
+  
   val endpoints: HttpRoutes[IO] = HttpRoutes.of[IO] {
-    case GET -> Root => Ok(GroupRepository.findAllCurrent().asJson)
+    case GET -> Root => Ok(repo.findAllCurrent().asJson)
 
-    case GET -> Root / id => GroupRepository.findByMitreId(id) match {
+    case GET -> Root / id => repo.findByMitreId(id) match {
       case Right(obj) => Ok(obj.asJson)
       case Left(message) => NotFound(message.asJson)
     }
@@ -26,7 +26,7 @@ object GroupApi {
     case req @ POST -> Root =>
       for {
         sdo <- req.as[SDOType]
-        response <- GroupRepository.add(sdo) match {
+        response <- repo.add(sdo) match {
           case Right(obj) => Created(obj.asJson)
           case Left(message) => Conflict(message.asJson)
         }
@@ -35,16 +35,26 @@ object GroupApi {
     case req @ PUT -> Root / id =>
       for {
         sdo <- req.as[SDOType]
-        response <- GroupRepository.update(id, sdo) match {
+        response <- repo.update(id, sdo) match {
           case Right(obj) => Ok(obj.asJson)
           case Left(message) => BadRequest(message.asJson)
         }
       } yield response
 
-    case DELETE -> Root / id => GroupRepository.delete(id) match {
+    case DELETE -> Root / id => repo.delete(id) match {
       case Right(obj) => Ok(obj.asJson)
       case Left(message) => NotFound(message.asJson)
     }
   }
+
+}
+
+object ApiEndpoints {
+  
+  def apply[SDOType <: SDO](
+    implicit repo: SDORepository[SDOType],
+    encoder: io.circe.Encoder[SDOType],
+    decoder: EntityDecoder[cats.effect.IO, SDOType],
+  ) = new ApiEndpoints(repo)
 
 }

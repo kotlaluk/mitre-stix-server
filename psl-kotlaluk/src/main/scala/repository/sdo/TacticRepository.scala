@@ -3,9 +3,10 @@ package repository.sdo
 
 import com.kodekutters.stix.CustomStix
 
-object TacticRepository extends SDORepository {
+object TacticRepository extends SDORepository[CustomStix] {
 
-  override type SDOType = CustomStix
+//  override type SDOType = CustomStix
+  type SDOType = CustomStix
 
   override def findAll(): Seq[SDOType] = {
     storage.readAll().collect {

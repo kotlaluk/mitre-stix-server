@@ -4,11 +4,15 @@ package repository.sdo
 import repository._
 import utils.SDOUtils
 
-import com.kodekutters.stix.{Identifier, SDO}
+import com.kodekutters.stix.{Identifier, SDO, StixObj}
 
-trait SDORepository extends MitreRepository {
+trait SDORepository[SDOType <: SDO] extends MitreRepository {
 
-  type SDOType <: SDO
+//  type SDOType <: SDO
+
+  private def toSdo(stixObj: StixObj) = {
+    stixObj.asInstanceOf[SDOType]
+  }
 
   def findAll(): Seq[SDOType]
 
@@ -21,6 +25,7 @@ trait SDORepository extends MitreRepository {
   }
 
   def findById(id: Identifier): Either[MitreError, SDOType] = {
+//    findAll().find(_.id == id).fold(Left(new NotFoundError))(Right(toSdo))
     findAll().find(_.id == id) match {
       case Some(sdo) => Right(sdo.asInstanceOf[SDOType])
       case None => Left(new NotFoundError)

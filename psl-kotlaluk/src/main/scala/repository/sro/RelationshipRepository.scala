@@ -13,16 +13,16 @@ object RelationshipRepository extends SRORepository {
     }
   }
 
-  def findBySource(rel_type: String)(source: SDO): Seq[SROType] = {
+  def findBySource(relType: String)(source: SDO): Seq[SROType] = {
     val filter: SROType => Boolean = sro => {
-      sro.relationship_type == rel_type && sro.source_ref == source.id
+      sro.relationship_type == relType && sro.source_ref == source.id
     }
     findByFilter(filter)
   }
 
-  def findByTarget(rel_type: String)(target: SDO): Seq[SROType] = {
+  def findByTarget(relType: String)(target: SDO): Seq[SROType] = {
     val filter: SROType => Boolean = sro => {
-      sro.relationship_type == rel_type && sro.target_ref == target.id
+      sro.relationship_type == relType && sro.target_ref == target.id
     }
     findByFilter(filter)
   }

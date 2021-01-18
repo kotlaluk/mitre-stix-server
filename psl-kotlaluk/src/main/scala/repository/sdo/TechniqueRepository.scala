@@ -6,9 +6,10 @@ import utils.SDOUtils
 import com.kodekutters.stix.AttackPattern
 import play.api.libs.json._
 
-object TechniqueRepository extends SDORepository {
+object TechniqueRepository extends SDORepository[AttackPattern] {
 
-  override type SDOType = AttackPattern
+//  override type SDOType = AttackPattern
+  type SDOType = AttackPattern
 
   override def findAll(): Seq[SDOType] = {
     storage.readAll().collect {
