@@ -7,20 +7,10 @@ import play.api.libs.json.Reads
 package object utils {
 
   implicit class SDOUtils(val sdo: SDO) {
-    val mitreId: String = sdo.external_references match {
-      case Some(ref) => ref.head.external_id.getOrElse("")
-      case None => ""
-    }
+    val mitreId: String = sdo.external_references.flatMap(_.headOption).flatMap(_.external_id).getOrElse("")
 
-    def getCustomProperty[T](property: String, reads: Reads[T]): Option[T] = {
-//      val reads = Json.using[Json.WithDefaultValues].reads[T]
-      sdo.custom match {
-        case Some(customProps) => customProps.nodes.get(property) match {
-          case Some(value) => value.asOpt[T](reads)
-          case _ => None
-        }
-        case _ => None
-      }
+    def getCustomProperty[T: Reads](property: String): Option[T] = {
+      sdo.custom.flatMap(_.nodes.get(property)).flatMap(_.asOpt[T](implicitly[Reads[T]]))
     }
   }
 

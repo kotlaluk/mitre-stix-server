@@ -19,7 +19,7 @@ object TechniqueRepository extends SDORepository[AttackPattern] {
 
   def findCurrentWithoutSubtechniques(): Seq[SDOType] = {
     findAllCurrent().filter(
-      ! _.getCustomProperty[Boolean]("x_mitre_is_subtechnique", JsPath.read[Boolean]).getOrElse(false)
+      ! _.getCustomProperty[Boolean]("x_mitre_is_subtechnique").getOrElse(false)
     )
   }
 }
