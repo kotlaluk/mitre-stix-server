@@ -1,13 +1,13 @@
 package org.example.mitrestixserver
 package repository.sdo
 
+import storage.StixStorage
+
 import com.kodekutters.stix.IntrusionSet
-import org.example.mitrestixserver.storage.StixStorage
 
 
-class GroupRepository(protected val storage: StixStorage) extends SDORepository2[IntrusionSet] {
+class GroupRepository(protected val storage: StixStorage) extends SDORepository[IntrusionSet] {
 
-  //  override type SDOType = IntrusionSet
   type SDOType = IntrusionSet
 
   override def findAll(): Seq[SDOType] = {

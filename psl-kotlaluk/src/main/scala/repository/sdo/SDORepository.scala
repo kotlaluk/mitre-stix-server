@@ -2,17 +2,16 @@ package org.example.mitrestixserver
 package repository.sdo
 
 import repository._
+import repository.implicits._
+import storage.StixStorage
 import utils.SDOUtils
 
-import com.kodekutters.stix.{Identifier, SDO, StixObj}
+import com.kodekutters.stix.{Identifier, SDO}
 
-trait SDORepository[SDOType <: SDO] extends MitreRepository {
 
-//  type SDOType <: SDO
+trait SDORepository[SDOType <: SDO] {
 
-  private def toSdo(stixObj: StixObj) = {
-    stixObj.asInstanceOf[SDOType]
-  }
+  protected def storage: StixStorage
 
   def findAll(): Seq[SDOType]
 
@@ -25,11 +24,7 @@ trait SDORepository[SDOType <: SDO] extends MitreRepository {
   }
 
   def findById(id: Identifier): Either[MitreError, SDOType] = {
-//    findAll().find(_.id == id).fold(Left(new NotFoundError))(Right(toSdo))
-    findAll().find(_.id == id) match {
-      case Some(sdo) => Right(sdo.asInstanceOf[SDOType])
-      case None => Left(new NotFoundError)
-    }
+    findAll().find(_.id == id).toEither(new NotFoundError)
   }
 
   def findByMitreId(id: String): Either[MitreError, SDOType] = {
@@ -40,13 +35,10 @@ trait SDORepository[SDOType <: SDO] extends MitreRepository {
   }
 
   def add(sdo: SDOType): Either[MitreError, SDOType] = {
-    findByMitreId(sdo.mitreId) match {
-      case Right(_) => Left(new ConflictError)
-      case Left(_) => storage.create(sdo) match {
-        case Some(obj) => Right(obj.asInstanceOf[SDOType])
-        case None => Left(new ConflictError)
-      }
-    }
+    for {
+      _ <- findByMitreId(sdo.mitreId).map(_ => new ConflictError).invert
+      obj <- storage.create(sdo).toEither(new ConflictError)
+    } yield obj.asInstanceOf[SDOType]
   }
 
   def update(id: String, sdo: SDOType): Either[MitreError, SDOType] = {

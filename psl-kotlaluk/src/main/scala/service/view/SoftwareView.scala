@@ -7,24 +7,26 @@ import repository.sro.RelationshipRepository
 import utils.SDOUtils
 
 
-object SoftwareView extends ViewEndpoints {
+class SoftwareView(repo: SoftwareRepository,
+                   techniqueRepository: TechniqueRepository,
+                   relationshipRepository: RelationshipRepository) extends ViewEndpoints {
 
   override val endpoint: String = "software"
 
   val listView: (String, Seq[ListItem]) = {
-    val list = SoftwareRepository.findAllCurrent().sortBy(_.mitreId).map(
+    val list = repo.findAllCurrent().sortBy(_.mitreId).map(
       sdo => ListItem(sdo.mitreId, sdo.name, s"/${endpoint}/${sdo.mitreId}")
     )
     ("Software", list)
   }
 
   def detailView(id: String): Either[MitreError, DetailItem] = {
-    SoftwareRepository.findByMitreId(id) match {
+    repo.findByMitreId(id) match {
       case Left(error) => Left(error)
       case Right(sw) => {
         val description = sw.description.getOrElse("")
-        val techniques = RelationshipRepository.findUses(sw).collect(rel =>
-          TechniqueRepository.findById(rel.target_ref) match {
+        val techniques = relationshipRepository.findUses(sw).collect(rel =>
+          techniqueRepository.findById(rel.target_ref) match {
             case Right(technique) => ListItem(technique.mitreId, technique.name, s"/techniques/${technique.mitreId}")
           }
         )
@@ -34,4 +36,11 @@ object SoftwareView extends ViewEndpoints {
       }
     }
   }
+}
+
+object SoftwareView {
+  def apply(implicit repo: SoftwareRepository,
+            techniqueRepository: TechniqueRepository,
+            relationshipRepository: RelationshipRepository
+           ): SoftwareView = new SoftwareView(repo, techniqueRepository, relationshipRepository)
 }

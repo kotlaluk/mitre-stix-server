@@ -1,9 +1,9 @@
 package org.example.mitrestixserver
 
 import service.MitreService
+import storage.{FileLoader, InMemStixStorage}
 
 import cats.effect._
-import org.example.mitrestixserver.storage.{FileLoader, InMemStixStorage}
 import org.http4s.server.blaze._
 
 import scala.concurrent.ExecutionContext.global

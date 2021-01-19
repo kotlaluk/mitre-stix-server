@@ -7,24 +7,26 @@ import repository.sro.RelationshipRepository
 import utils.SDOUtils
 
 
-object MitigationView extends ViewEndpoints {
+class MitigationView(repo: MitigationRepository,
+                     techniqueRepository: TechniqueRepository,
+                     relationshipRepository: RelationshipRepository) extends ViewEndpoints {
 
   override val endpoint: String = "mitigations"
 
   val listView: (String, Seq[ListItem]) = {
-    val list = MitigationRepository.findAllCurrent().sortBy(_.mitreId).map(
+    val list = repo.findAllCurrent().sortBy(_.mitreId).map(
       sdo => ListItem(sdo.mitreId, sdo.name, s"/${endpoint}/${sdo.mitreId}")
     )
     ("Mitigations", list)
   }
 
   def detailView(id: String): Either[MitreError, DetailItem] = {
-    MitigationRepository.findByMitreId(id) match {
+    repo.findByMitreId(id) match {
       case Left(error) => Left(error)
       case Right(mitigation) => {
         val description = mitigation.description.getOrElse("")
-        val techniques = RelationshipRepository.findMitigates(mitigation).collect(rel =>
-          TechniqueRepository.findById(rel.target_ref) match {
+        val techniques = relationshipRepository.findMitigates(mitigation).collect(rel =>
+          techniqueRepository.findById(rel.target_ref) match {
             case Right(technique) => ListItem(technique.mitreId, technique.name, s"/techniques/${technique.mitreId}")
           }
         )
@@ -34,4 +36,11 @@ object MitigationView extends ViewEndpoints {
       }
     }
   }
+}
+
+object MitigationView {
+  def apply(implicit repo: MitigationRepository,
+            techniqueRepository: TechniqueRepository,
+            relationshipRepository: RelationshipRepository
+           ): MitigationView = new MitigationView(repo, techniqueRepository, relationshipRepository)
 }

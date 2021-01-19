@@ -1,11 +1,13 @@
 package org.example.mitrestixserver
 package repository.sdo
 
+import storage.StixStorage
+
 import com.kodekutters.stix.CustomStix
 
-object TacticRepository extends SDORepository[CustomStix] {
 
-//  override type SDOType = CustomStix
+class TacticRepository(protected val storage: StixStorage) extends SDORepository[CustomStix] {
+
   type SDOType = CustomStix
 
   override def findAll(): Seq[SDOType] = {

@@ -1,11 +1,13 @@
 package org.example.mitrestixserver
 package repository.sdo
 
+import storage.StixStorage
+
 import com.kodekutters.stix.Tool
 
-object SoftwareRepository extends SDORepository[Tool] {
 
-//  override type SDOType = Tool
+class SoftwareRepository(protected val storage: StixStorage) extends SDORepository[Tool] {
+
   type SDOType = Tool
 
   override def findAll(): Seq[SDOType] = {

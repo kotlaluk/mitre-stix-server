@@ -3,6 +3,7 @@ package storage
 
 import com.kodekutters.stix.{Bundle, StixObj}
 
+
 class InMemStixStorage(stixData: Bundle) extends StixStorage {
 
   def create(stixObj: StixObj): Option[StixObj] = {

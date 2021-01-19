@@ -1,7 +1,7 @@
 package org.example.mitrestixserver
 package service.api
 
-import repository.sdo.{SDORepository, SDORepository2}
+import repository.sdo.SDORepository
 
 import cats.effect.IO
 import com.kodekutters.stix.SDO
@@ -11,9 +11,10 @@ import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.io._
 import org.http4s.{EntityDecoder, HttpRoutes}
 
-class ApiEndpoints[SDOType <: SDO](
-    repo: SDORepository2[SDOType],
-  )(implicit encoder: io.circe.Encoder[SDOType], decoder: EntityDecoder[cats.effect.IO, SDOType]) {
+
+class ApiEndpoints[SDOType <: SDO](repo: SDORepository[SDOType])(
+  implicit encoder: io.circe.Encoder[SDOType],
+  decoder: EntityDecoder[cats.effect.IO, SDOType]) {
   
   val endpoints: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => Ok(repo.findAllCurrent().asJson)
@@ -51,10 +52,9 @@ class ApiEndpoints[SDOType <: SDO](
 
 object ApiEndpoints {
   
-  def apply[SDOType <: SDO](
-    implicit repo: SDORepository2[SDOType],
-    encoder: io.circe.Encoder[SDOType],
-    decoder: EntityDecoder[cats.effect.IO, SDOType],
+  def apply[SDOType <: SDO](implicit repo: SDORepository[SDOType],
+                             encoder: io.circe.Encoder[SDOType],
+                             decoder: EntityDecoder[cats.effect.IO, SDOType]
   ) = new ApiEndpoints(repo)
 
 }

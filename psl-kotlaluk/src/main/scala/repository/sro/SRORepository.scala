@@ -1,13 +1,14 @@
 package org.example.mitrestixserver
 package repository.sro
 
-import repository.MitreRepository
+import storage.StixStorage
 
 import com.kodekutters.stix.SRO
 
-trait SRORepository extends MitreRepository {
 
-  type SROType <: SRO
+trait SRORepository[SROType <: SRO] {
+
+  protected def storage: StixStorage
 
   def findAll(): Seq[SROType]
 

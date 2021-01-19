@@ -11,16 +11,16 @@ import org.http4s.twirl._
 import play.api.libs.json.JsPath
 
 
-object IndexView {
+class IndexView(tacticRepository: TacticRepository, techniqueRepository: TechniqueRepository) {
 
   val endpoints: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root => Ok(html.index(view))
   }
 
   val view: Seq[(String, Seq[ListItem])] = {
-    TacticRepository.findAllCurrent().map(tactic => {
-      val killChainPhase = tactic.getCustomProperty[String]("x_mitre_shortname", JsPath.read[String]).getOrElse("Undefined")
-      val listItems = TechniqueRepository.findCurrentWithoutSubtechniques().filter(_.kill_chain_phases.getOrElse(List())
+    tacticRepository.findAllCurrent().map(tactic => {
+      val killChainPhase = tactic.getCustomProperty[String]("x_mitre_shortname").getOrElse("Undefined")
+      val listItems = techniqueRepository.findCurrentWithoutSubtechniques().filter(_.kill_chain_phases.getOrElse(List())
         .exists(_.phase_name == killChainPhase)).map(sdo =>
           ListItem(sdo.mitreId, sdo.name, s"/techniques/${sdo.mitreId}")
         )
@@ -28,4 +28,10 @@ object IndexView {
     })
   }
 
+}
+
+object IndexView {
+  def apply(implicit tacticRepository: TacticRepository,
+            techniqueRepository: TechniqueRepository
+           ): IndexView = new IndexView(tacticRepository, techniqueRepository)
 }

@@ -1,11 +1,14 @@
 package org.example.mitrestixserver
 package repository.sro
 
+import storage.StixStorage
+
 import com.kodekutters.stix.{Relationship, SDO}
 
-object RelationshipRepository extends SRORepository {
 
-  override type SROType = Relationship
+class RelationshipRepository(protected val storage: StixStorage) extends SRORepository[Relationship] {
+
+  type SROType = Relationship
 
   override def findAll(): Seq[SROType] = {
     storage.readAll().collect {
@@ -27,11 +30,11 @@ object RelationshipRepository extends SRORepository {
     findByFilter(filter)
   }
 
-  val findUses: SDO => Seq[SROType] = findBySource("uses")
-  val findUsedBy: SDO => Seq[SROType] = findByTarget("uses")
-  val findSubtechniques: SDO => Seq[SROType] = findByTarget("subtechnique-of")
-  val findSubtechniqueOf: SDO => Seq[SROType] = findBySource("subtechnique-of")
-  val findMitigates: SDO => Seq[SROType] = findBySource("mitigates")
-  val findMitigatedBy: SDO => Seq[SROType] = findByTarget("mitigates")
+  def findUses: SDO => Seq[SROType] = findBySource("uses")
+  def findUsedBy: SDO => Seq[SROType] = findByTarget("uses")
+  def findSubtechniques: SDO => Seq[SROType] = findByTarget("subtechnique-of")
+  def findSubtechniqueOf: SDO => Seq[SROType] = findBySource("subtechnique-of")
+  def findMitigates: SDO => Seq[SROType] = findBySource("mitigates")
+  def findMitigatedBy: SDO => Seq[SROType] = findByTarget("mitigates")
 
 }
