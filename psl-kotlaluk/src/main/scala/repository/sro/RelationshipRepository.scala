@@ -16,19 +16,11 @@ class RelationshipRepository(protected val storage: StixStorage) extends SRORepo
     }
   }
 
-  def findBySource(relType: String)(source: SDO): Seq[SROType] = {
-    val filter: SROType => Boolean = sro => {
-      sro.relationship_type == relType && sro.source_ref == source.id
-    }
-    findByFilter(filter)
-  }
+  def findBySource(relType: String)(source: SDO): Seq[SROType] =
+    findByFilter(sro => sro.relationship_type == relType && sro.source_ref == source.id)
 
-  def findByTarget(relType: String)(target: SDO): Seq[SROType] = {
-    val filter: SROType => Boolean = sro => {
-      sro.relationship_type == relType && sro.target_ref == target.id
-    }
-    findByFilter(filter)
-  }
+  def findByTarget(relType: String)(target: SDO): Seq[SROType] =
+    findByFilter(sro => sro.relationship_type == relType && sro.target_ref == target.id)
 
   def findUses: SDO => Seq[SROType] = findBySource("uses")
   def findUsedBy: SDO => Seq[SROType] = findByTarget("uses")

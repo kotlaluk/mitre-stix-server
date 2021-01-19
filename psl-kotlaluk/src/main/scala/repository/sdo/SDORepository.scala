@@ -16,23 +16,18 @@ trait SDORepository[SDOType <: SDO] {
   def findAll(): Seq[SDOType]
 
   def findAllCurrent(): Seq[SDOType] = {
-    val filter: SDOType => Boolean = sdo => {
-      val customProps = sdo.custom.get
-      !(sdo.revoked.getOrElse(false) || customProps.nodes.contains("x_mitre_deprecated"))
-    }
-    findAll().filter(filter)
+    findAll().filter(sdo => {
+      val isRevoked = sdo.revoked.getOrElse(false)
+      val isDeprecated = sdo.getCustomProperty[Boolean]("x_mitre_deprecated").getOrElse(false)
+      !(isRevoked || isDeprecated)
+    })
   }
 
-  def findById(id: Identifier): Either[MitreError, SDOType] = {
+  def findById(id: Identifier): Either[MitreError, SDOType] =
     findAll().find(_.id == id).toEither(new NotFoundError)
-  }
 
-  def findByMitreId(id: String): Either[MitreError, SDOType] = {
-    findAll().find(_.mitreId == id) match {
-      case Some(sdo) => Right(sdo)
-      case None => Left(new NotFoundError)
-    }
-  }
+  def findByMitreId(id: String): Either[MitreError, SDOType] =
+    findAll().find(_.mitreId == id).toEither(new NotFoundError)
 
   def add(sdo: SDOType): Either[MitreError, SDOType] = {
     for {
@@ -44,22 +39,16 @@ trait SDORepository[SDOType <: SDO] {
   def update(id: String, sdo: SDOType): Either[MitreError, SDOType] = {
     if (id != sdo.mitreId)
       return Left(new MismatchError)
-    findByMitreId(id) match {
-      case Right(_) => storage.update(sdo) match {
-        case Some(obj) => Right(obj.asInstanceOf[SDOType])
-        case None => Left(new NotFoundError)
-      }
-      case Left(message) => Left(message)
-    }
+    for {
+      _ <- findByMitreId(id)
+      obj <- storage.update(sdo).toEither(new NotFoundError)
+    } yield obj.asInstanceOf[SDOType]
   }
 
   def delete(id: String): Either[MitreError, SDOType] = {
-    findByMitreId(id) match {
-      case Right(sdo) => storage.delete(sdo) match {
-        case Some(obj) => Right(obj.asInstanceOf[SDOType])
-        case None => Left(new NotFoundError)
-      }
-      case Left(message) => Left(message)
-    }
+    for {
+      sdo <- findByMitreId(id)
+      obj <- storage.delete(sdo).toEither(new NotFoundError)
+    } yield obj.asInstanceOf[SDOType]
   }
 }
