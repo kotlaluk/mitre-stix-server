@@ -1,0 +1,913 @@
+{
+	"info": {
+		"_postman_id": "35394ced-8d45-4ee3-9654-6930763b50bf",
+		"name": "mitre-stix-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Techniques",
+			"item": [
+				{
+					"name": "Find all Techniques",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct tactics count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(525);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one Technique",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"T1546.004\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1546.004",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1546.004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Technique",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"T1003.038\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"attack-pattern\",\n    \"id\": {\n        \"objType\": \"attack-pattern\",\n        \"id\": \"d0b4fcdb-d67d-4ed2-99ce-788b12f8c0f5\"\n    },\n    \"created\": {\n        \"time\": \"2020-02-11T18:46:56.263Z\"\n    },\n    \"modified\": {\n        \"time\": \"2020-03-20T15:56:55.022Z\"\n    },\n    \"name\": \"/etc/passwd and /etc/shadow\",\n    \"description\": \"Adversaries may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. Most modern Linux operating systems use a combination of <code>/etc/passwd</code> and <code>/etc/shadow</code> to store user account information including password hashes in <code>/etc/shadow</code>. By default, <code>/etc/shadow</code> is only readable by the root user.(Citation: Linux Password and Shadow File Formats)\\n\\nThe Linux utility, unshadow, can be used to combine the two files in a format suited for password cracking utilities such as John the Ripper:(Citation: nixCraft - John the Ripper) <code># /usr/bin/unshadow /etc/passwd /etc/shadow > /tmp/crack.password.db</code>\\n\",\n    \"kill_chain_phases\": [\n        {\n            \"kill_chain_name\": \"mitre-attack\",\n            \"phase_name\": \"credential-access\"\n        }\n    ],\n    \"revoked\": null,\n    \"labels\": null,\n    \"external_references\": [\n        {\n            \"source_name\": \"mitre-attack\",\n            \"description\": null,\n            \"external_id\": \"T1003.038\",\n            \"url\": \"https://attack.mitre.org/techniques/T1003/008\",\n            \"hashes\": null\n        },\n        {\n            \"source_name\": \"Linux Password and Shadow File Formats\",\n            \"description\": \"The Linux Documentation Project. (n.d.). Linux Password and Shadow File Formats. Retrieved February 19, 2020.\",\n            \"external_id\": null,\n            \"url\": \"https://www.tldp.org/LDP/lame/LAME/linux-admin-made-easy/shadow-file-formats.html\",\n            \"hashes\": null\n        },\n        {\n            \"source_name\": \"nixCraft - John the Ripper\",\n            \"description\": \"Vivek Gite. (2014, September 17). Linux Password Cracking: Explain unshadow and john Commands (John the Ripper Tool). Retrieved February 19, 2020.\",\n            \"external_id\": null,\n            \"url\": \"https://www.cyberciti.biz/faq/unix-linux-password-cracking-john-the-ripper/\",\n            \"hashes\": null\n        }\n    ],\n    \"object_marking_refs\": [\n        {\n            \"objType\": \"marking-definition\",\n            \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n        }\n    ],\n    \"granular_markings\": null,\n    \"created_by_ref\": {\n        \"objType\": \"identity\",\n        \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n    },\n    \"custom\": {\n        \"nodes\": {\n            \"x_mitre_platforms\": {\n                \"JsArray\": {\n                    \"value\": [\n                        {\n                            \"JsString\": {\n                                \"value\": \"Linux\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"x_mitre_permissions_required\": {\n                \"JsArray\": {\n                    \"value\": [\n                        {\n                            \"JsString\": {\n                                \"value\": \"root\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"x_mitre_is_subtechnique\": {\n                \"JsTrue\": {}\n            },\n            \"x_mitre_version\": {\n                \"JsString\": {\n                    \"value\": \"1.0\"\n                }\n            },\n            \"x_mitre_detection\": {\n                \"JsString\": {\n                    \"value\": \"The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes attempting to access <code>/etc/passwd</code> and <code>/etc/shadow</code>, alerting on the pid, process name, and arguments of such programs.\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Technique (ERROR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ConflictError.message).to.include(\"Object with the same ID or MITRE ID already exists\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"attack-pattern\",\n    \"id\": {\n        \"objType\": \"attack-pattern\",\n        \"id\": \"d0b4fcdb-d67d-4ed2-99ce-788b12f8c0f5\"\n    },\n    \"created\": {\n        \"time\": \"2020-02-11T18:46:56.263Z\"\n    },\n    \"modified\": {\n        \"time\": \"2020-03-20T15:56:55.022Z\"\n    },\n    \"name\": \"/etc/passwd and /etc/shadow\",\n    \"description\": \"Adversaries may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. Most modern Linux operating systems use a combination of <code>/etc/passwd</code> and <code>/etc/shadow</code> to store user account information including password hashes in <code>/etc/shadow</code>. By default, <code>/etc/shadow</code> is only readable by the root user.(Citation: Linux Password and Shadow File Formats)\\n\\nThe Linux utility, unshadow, can be used to combine the two files in a format suited for password cracking utilities such as John the Ripper:(Citation: nixCraft - John the Ripper) <code># /usr/bin/unshadow /etc/passwd /etc/shadow > /tmp/crack.password.db</code>\\n\",\n    \"kill_chain_phases\": [\n        {\n            \"kill_chain_name\": \"mitre-attack\",\n            \"phase_name\": \"credential-access\"\n        }\n    ],\n    \"revoked\": null,\n    \"labels\": null,\n    \"external_references\": [\n        {\n            \"source_name\": \"mitre-attack\",\n            \"description\": null,\n            \"external_id\": \"T1003.038\",\n            \"url\": \"https://attack.mitre.org/techniques/T1003/008\",\n            \"hashes\": null\n        },\n        {\n            \"source_name\": \"Linux Password and Shadow File Formats\",\n            \"description\": \"The Linux Documentation Project. (n.d.). Linux Password and Shadow File Formats. Retrieved February 19, 2020.\",\n            \"external_id\": null,\n            \"url\": \"https://www.tldp.org/LDP/lame/LAME/linux-admin-made-easy/shadow-file-formats.html\",\n            \"hashes\": null\n        },\n        {\n            \"source_name\": \"nixCraft - John the Ripper\",\n            \"description\": \"Vivek Gite. (2014, September 17). Linux Password Cracking: Explain unshadow and john Commands (John the Ripper Tool). Retrieved February 19, 2020.\",\n            \"external_id\": null,\n            \"url\": \"https://www.cyberciti.biz/faq/unix-linux-password-cracking-john-the-ripper/\",\n            \"hashes\": null\n        }\n    ],\n    \"object_marking_refs\": [\n        {\n            \"objType\": \"marking-definition\",\n            \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n        }\n    ],\n    \"granular_markings\": null,\n    \"created_by_ref\": {\n        \"objType\": \"identity\",\n        \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n    },\n    \"custom\": {\n        \"nodes\": {\n            \"x_mitre_platforms\": {\n                \"JsArray\": {\n                    \"value\": [\n                        {\n                            \"JsString\": {\n                                \"value\": \"Linux\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"x_mitre_permissions_required\": {\n                \"JsArray\": {\n                    \"value\": [\n                        {\n                            \"JsString\": {\n                                \"value\": \"root\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"x_mitre_is_subtechnique\": {\n                \"JsTrue\": {}\n            },\n            \"x_mitre_version\": {\n                \"JsString\": {\n                    \"value\": \"1.0\"\n                }\n            },\n            \"x_mitre_detection\": {\n                \"JsString\": {\n                    \"value\": \"The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes attempting to access <code>/etc/passwd</code> and <code>/etc/shadow</code>, alerting on the pid, process name, and arguments of such programs.\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Technique",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"T1546.004\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"type\": \"attack-pattern\",\n        \"id\": {\n            \"objType\": \"attack-pattern\",\n            \"id\": \"b63a34e8-0a61-4c97-a23b-bf8a2ed812e2\"\n        },\n        \"created\": {\n            \"time\": \"2020-01-24T14:13:45.936Z\"\n        },\n        \"modified\": {\n            \"time\": \"2020-03-24T16:28:04.990Z\"\n        },\n        \"name\": \".bash_profile or .bashrc\",\n        \"description\": \"Adversaries may establish persistence by executing malicious content triggered by a user’s shell. <code>~/.bash_profile</code> and <code>~/.bashrc</code> are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly.\\n\\n<code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the <code>~/.bash_profile</code> script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the <code>~/.bashrc</code> script is executed. This allows users more fine-grained control over when they want certain commands executed. These shell scripts are meant to be written to by the local user to configure their own environment.\\n\\nThe macOS Terminal.app is a little different in that it runs a login shell by default each time a new terminal window is opened, thus calling <code>~/.bash_profile</code> each time instead of <code>~/.bashrc</code>.\\n\\nAdversaries may abuse these shell scripts by inserting arbitrary shell commands that may be used to execute other binaries to gain persistence. Every time the user logs in or opens a new shell, the modified ~/.bash_profile and/or ~/.bashrc scripts will be executed.(Citation: amnesia malware)\",\n        \"kill_chain_phases\": [\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"privilege-escalation\"\n            },\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"persistence\"\n            }\n        ],\n        \"revoked\": null,\n        \"labels\": null,\n        \"external_references\": [\n            {\n                \"source_name\": \"mitre-attack\",\n                \"description\": null,\n                \"external_id\": \"T1546.004\",\n                \"url\": \"https://attack.mitre.org/techniques/T1546/004\",\n                \"hashes\": null\n            },\n            {\n                \"source_name\": \"amnesia malware\",\n                \"description\": \"Claud Xiao, Cong Zheng, Yanhui Jia. (2017, April 6). New IoT/Linux Malware Targets DVRs, Forms Botnet. Retrieved February 19, 2018.\",\n                \"external_id\": null,\n                \"url\": \"https://researchcenter.paloaltonetworks.com/2017/04/unit42-new-iotlinux-malware-targets-dvrs-forms-botnet/\",\n                \"hashes\": null\n            }\n        ],\n        \"object_marking_refs\": [\n            {\n                \"objType\": \"marking-definition\",\n                \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n            }\n        ],\n        \"granular_markings\": null,\n        \"created_by_ref\": {\n            \"objType\": \"identity\",\n            \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n        },\n        \"custom\": {\n            \"nodes\": {\n                \"x_mitre_platforms\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Linux\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"macOS\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_data_sources\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process use of network\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process command-line parameters\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process monitoring\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"File monitoring\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_permissions_required\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"User\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Administrator\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_is_subtechnique\": {\n                    \"JsTrue\": {}\n                },\n                \"x_mitre_version\": {\n                    \"JsString\": {\n                        \"value\": \"1.0\"\n                    }\n                },\n                \"x_mitre_detection\": {\n                    \"JsString\": {\n                        \"value\": \"While users may customize their <code>~/.bashrc</code> and <code>~/.bash_profile</code> files , there are only certain types of commands that typically appear in these files. Monitor for abnormal commands such as execution of unknown programs, opening network sockets, or reaching out across the network when user profiles are loaded during the login process.\"\n                    }\n                }\n            }\n        }\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1546.004",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1546.004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Technique (ERROR1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.MismatchError.message).to.include(\"MITRE ID mismatch between the request and the provided object\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"type\": \"attack-pattern\",\n        \"id\": {\n            \"objType\": \"attack-pattern\",\n            \"id\": \"b63a34e8-0a61-4c97-a23b-bf8a2ed812e2\"\n        },\n        \"created\": {\n            \"time\": \"2020-01-24T14:13:45.936Z\"\n        },\n        \"modified\": {\n            \"time\": \"2020-03-24T16:28:04.990Z\"\n        },\n        \"name\": \".bash_profile or .bashrc\",\n        \"description\": \"Adversaries may establish persistence by executing malicious content triggered by a user’s shell. <code>~/.bash_profile</code> and <code>~/.bashrc</code> are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly.\\n\\n<code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the <code>~/.bash_profile</code> script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the <code>~/.bashrc</code> script is executed. This allows users more fine-grained control over when they want certain commands executed. These shell scripts are meant to be written to by the local user to configure their own environment.\\n\\nThe macOS Terminal.app is a little different in that it runs a login shell by default each time a new terminal window is opened, thus calling <code>~/.bash_profile</code> each time instead of <code>~/.bashrc</code>.\\n\\nAdversaries may abuse these shell scripts by inserting arbitrary shell commands that may be used to execute other binaries to gain persistence. Every time the user logs in or opens a new shell, the modified ~/.bash_profile and/or ~/.bashrc scripts will be executed.(Citation: amnesia malware)\",\n        \"kill_chain_phases\": [\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"privilege-escalation\"\n            },\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"persistence\"\n            }\n        ],\n        \"revoked\": null,\n        \"labels\": null,\n        \"external_references\": [\n            {\n                \"source_name\": \"mitre-attack\",\n                \"description\": null,\n                \"external_id\": \"T1546.004\",\n                \"url\": \"https://attack.mitre.org/techniques/T1546/004\",\n                \"hashes\": null\n            },\n            {\n                \"source_name\": \"amnesia malware\",\n                \"description\": \"Claud Xiao, Cong Zheng, Yanhui Jia. (2017, April 6). New IoT/Linux Malware Targets DVRs, Forms Botnet. Retrieved February 19, 2018.\",\n                \"external_id\": null,\n                \"url\": \"https://researchcenter.paloaltonetworks.com/2017/04/unit42-new-iotlinux-malware-targets-dvrs-forms-botnet/\",\n                \"hashes\": null\n            }\n        ],\n        \"object_marking_refs\": [\n            {\n                \"objType\": \"marking-definition\",\n                \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n            }\n        ],\n        \"granular_markings\": null,\n        \"created_by_ref\": {\n            \"objType\": \"identity\",\n            \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n        },\n        \"custom\": {\n            \"nodes\": {\n                \"x_mitre_platforms\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Linux\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"macOS\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_data_sources\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process use of network\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process command-line parameters\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process monitoring\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"File monitoring\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_permissions_required\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"User\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Administrator\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_is_subtechnique\": {\n                    \"JsTrue\": {}\n                },\n                \"x_mitre_version\": {\n                    \"JsString\": {\n                        \"value\": \"1.0\"\n                    }\n                },\n                \"x_mitre_detection\": {\n                    \"JsString\": {\n                        \"value\": \"While users may customize their <code>~/.bashrc</code> and <code>~/.bash_profile</code> files , there are only certain types of commands that typically appear in these files. Monitor for abnormal commands such as execution of unknown programs, opening network sockets, or reaching out across the network when user profiles are loaded during the login process.\"\n                    }\n                }\n            }\n        }\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1546.005",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1546.005"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Technique (ERROR2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.NotFoundError.message).to.include(\"Object with the specified MITRE ID does not exist\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"type\": \"attack-pattern\",\n        \"id\": {\n            \"objType\": \"attack-pattern\",\n            \"id\": \"b63a34e8-0a61-4c97-a23b-bf8a2ed812f2\"\n        },\n        \"created\": {\n            \"time\": \"2020-01-24T14:13:45.936Z\"\n        },\n        \"modified\": {\n            \"time\": \"2020-03-24T16:28:04.990Z\"\n        },\n        \"name\": \".bash_profile or .bashrc\",\n        \"description\": \"Adversaries may establish persistence by executing malicious content triggered by a user’s shell. <code>~/.bash_profile</code> and <code>~/.bashrc</code> are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly.\\n\\n<code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the <code>~/.bash_profile</code> script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the <code>~/.bashrc</code> script is executed. This allows users more fine-grained control over when they want certain commands executed. These shell scripts are meant to be written to by the local user to configure their own environment.\\n\\nThe macOS Terminal.app is a little different in that it runs a login shell by default each time a new terminal window is opened, thus calling <code>~/.bash_profile</code> each time instead of <code>~/.bashrc</code>.\\n\\nAdversaries may abuse these shell scripts by inserting arbitrary shell commands that may be used to execute other binaries to gain persistence. Every time the user logs in or opens a new shell, the modified ~/.bash_profile and/or ~/.bashrc scripts will be executed.(Citation: amnesia malware)\",\n        \"kill_chain_phases\": [\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"privilege-escalation\"\n            },\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"persistence\"\n            }\n        ],\n        \"revoked\": null,\n        \"labels\": null,\n        \"external_references\": [\n            {\n                \"source_name\": \"mitre-attack\",\n                \"description\": null,\n                \"external_id\": \"T1546.004\",\n                \"url\": \"https://attack.mitre.org/techniques/T1546/004\",\n                \"hashes\": null\n            },\n            {\n                \"source_name\": \"amnesia malware\",\n                \"description\": \"Claud Xiao, Cong Zheng, Yanhui Jia. (2017, April 6). New IoT/Linux Malware Targets DVRs, Forms Botnet. Retrieved February 19, 2018.\",\n                \"external_id\": null,\n                \"url\": \"https://researchcenter.paloaltonetworks.com/2017/04/unit42-new-iotlinux-malware-targets-dvrs-forms-botnet/\",\n                \"hashes\": null\n            }\n        ],\n        \"object_marking_refs\": [\n            {\n                \"objType\": \"marking-definition\",\n                \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n            }\n        ],\n        \"granular_markings\": null,\n        \"created_by_ref\": {\n            \"objType\": \"identity\",\n            \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n        },\n        \"custom\": {\n            \"nodes\": {\n                \"x_mitre_platforms\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Linux\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"macOS\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_data_sources\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process use of network\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process command-line parameters\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process monitoring\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"File monitoring\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_permissions_required\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"User\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Administrator\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_is_subtechnique\": {\n                    \"JsTrue\": {}\n                },\n                \"x_mitre_version\": {\n                    \"JsString\": {\n                        \"value\": \"1.0\"\n                    }\n                },\n                \"x_mitre_detection\": {\n                    \"JsString\": {\n                        \"value\": \"While users may customize their <code>~/.bashrc</code> and <code>~/.bash_profile</code> files , there are only certain types of commands that typically appear in these files. Monitor for abnormal commands such as execution of unknown programs, opening network sockets, or reaching out across the network when user profiles are loaded during the login process.\"\n                    }\n                }\n            }\n        }\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1546.004",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1546.004"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Technique (ERROR3)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.NotFoundError.message).to.include(\"Object with the specified MITRE ID does not exist\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"type\": \"attack-pattern\",\n        \"id\": {\n            \"objType\": \"attack-pattern\",\n            \"id\": \"b63a34e8-0a61-4c97-a23b-bf8a2ed812e2\"\n        },\n        \"created\": {\n            \"time\": \"2020-01-24T14:13:45.936Z\"\n        },\n        \"modified\": {\n            \"time\": \"2020-03-24T16:28:04.990Z\"\n        },\n        \"name\": \".bash_profile or .bashrc\",\n        \"description\": \"Adversaries may establish persistence by executing malicious content triggered by a user’s shell. <code>~/.bash_profile</code> and <code>~/.bashrc</code> are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly.\\n\\n<code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the <code>~/.bash_profile</code> script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the <code>~/.bashrc</code> script is executed. This allows users more fine-grained control over when they want certain commands executed. These shell scripts are meant to be written to by the local user to configure their own environment.\\n\\nThe macOS Terminal.app is a little different in that it runs a login shell by default each time a new terminal window is opened, thus calling <code>~/.bash_profile</code> each time instead of <code>~/.bashrc</code>.\\n\\nAdversaries may abuse these shell scripts by inserting arbitrary shell commands that may be used to execute other binaries to gain persistence. Every time the user logs in or opens a new shell, the modified ~/.bash_profile and/or ~/.bashrc scripts will be executed.(Citation: amnesia malware)\",\n        \"kill_chain_phases\": [\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"privilege-escalation\"\n            },\n            {\n                \"kill_chain_name\": \"mitre-attack\",\n                \"phase_name\": \"persistence\"\n            }\n        ],\n        \"revoked\": null,\n        \"labels\": null,\n        \"external_references\": [\n            {\n                \"source_name\": \"mitre-attack\",\n                \"description\": null,\n                \"external_id\": \"T1546.104\",\n                \"url\": \"https://attack.mitre.org/techniques/T1546/004\",\n                \"hashes\": null\n            },\n            {\n                \"source_name\": \"amnesia malware\",\n                \"description\": \"Claud Xiao, Cong Zheng, Yanhui Jia. (2017, April 6). New IoT/Linux Malware Targets DVRs, Forms Botnet. Retrieved February 19, 2018.\",\n                \"external_id\": null,\n                \"url\": \"https://researchcenter.paloaltonetworks.com/2017/04/unit42-new-iotlinux-malware-targets-dvrs-forms-botnet/\",\n                \"hashes\": null\n            }\n        ],\n        \"object_marking_refs\": [\n            {\n                \"objType\": \"marking-definition\",\n                \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n            }\n        ],\n        \"granular_markings\": null,\n        \"created_by_ref\": {\n            \"objType\": \"identity\",\n            \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n        },\n        \"custom\": {\n            \"nodes\": {\n                \"x_mitre_platforms\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Linux\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"macOS\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_data_sources\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process use of network\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process command-line parameters\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Process monitoring\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"File monitoring\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_permissions_required\": {\n                    \"JsArray\": {\n                        \"value\": [\n                            {\n                                \"JsString\": {\n                                    \"value\": \"User\"\n                                }\n                            },\n                            {\n                                \"JsString\": {\n                                    \"value\": \"Administrator\"\n                                }\n                            }\n                        ]\n                    }\n                },\n                \"x_mitre_is_subtechnique\": {\n                    \"JsTrue\": {}\n                },\n                \"x_mitre_version\": {\n                    \"JsString\": {\n                        \"value\": \"1.0\"\n                    }\n                },\n                \"x_mitre_detection\": {\n                    \"JsString\": {\n                        \"value\": \"While users may customize their <code>~/.bashrc</code> and <code>~/.bash_profile</code> files , there are only certain types of commands that typically appear in these files. Monitor for abnormal commands such as execution of unknown programs, opening network sockets, or reaching out across the network when user profiles are loaded during the login process.\"\n                    }\n                }\n            }\n        }\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1546.104",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1546.104"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Technique",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"T1003.038\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1003.038",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1003.038"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Technique (ERROR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.NotFoundError.message).to.include(\"Object with the specified MITRE ID does not exist\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/techniques/T1003.038",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"techniques",
+								"T1003.038"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tactics",
+			"item": [
+				{
+					"name": "Find all Tactics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct tactics count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(14);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one Tactic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"TA0008\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics/TA0008",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics",
+								"TA0008"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Tactic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"TB0009\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"x-mitre-tactic\",\n    \"id\": {\n        \"objType\": \"x-mitre-tactic\",\n        \"id\": \"d108ce10-2419-4cf9-a774-46161d6c6cff\"\n    },\n    \"created\": {\n        \"time\": \"2018-10-17T00:14:20.652Z\"\n    },\n    \"modified\": {\n        \"time\": \"2019-07-19T17:44:53.176Z\"\n    },\n    \"revoked\": null,\n    \"labels\": null,\n    \"external_references\": [\n        {\n            \"source_name\": \"mitre-attack\",\n            \"description\": null,\n            \"external_id\": \"TB0009\",\n            \"url\": \"https://attack.mitre.org/tactics/TA0009\",\n            \"hashes\": null\n        }\n    ],\n    \"object_marking_refs\": [\n        {\n            \"objType\": \"marking-definition\",\n            \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n        }\n    ],\n    \"granular_markings\": null,\n    \"created_by_ref\": {\n        \"objType\": \"identity\",\n        \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n    },\n    \"custom\": {\n        \"nodes\": {\n            \"x_mitre_shortname\": {\n                \"JsString\": {\n                    \"value\": \"collection\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Tactic (ERROR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ConflictError.message).to.include(\"Object with the same ID or MITRE ID already exists\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"x-mitre-tactic\",\n    \"id\": {\n        \"objType\": \"x-mitre-tactic\",\n        \"id\": \"d108ce10-2419-4cf9-a774-46161d6c6cff\"\n    },\n    \"created\": {\n        \"time\": \"2018-10-17T00:14:20.652Z\"\n    },\n    \"modified\": {\n        \"time\": \"2019-07-19T17:44:53.176Z\"\n    },\n    \"revoked\": null,\n    \"labels\": null,\n    \"external_references\": [\n        {\n            \"source_name\": \"mitre-attack\",\n            \"description\": null,\n            \"external_id\": \"TB0009\",\n            \"url\": \"https://attack.mitre.org/tactics/TA0009\",\n            \"hashes\": null\n        }\n    ],\n    \"object_marking_refs\": [\n        {\n            \"objType\": \"marking-definition\",\n            \"id\": \"fa42a846-8d90-4e51-bc29-71d5b4802168\"\n        }\n    ],\n    \"granular_markings\": null,\n    \"created_by_ref\": {\n        \"objType\": \"identity\",\n        \"id\": \"c78cb6e5-0c4b-4611-8297-d1b8b55e40b5\"\n    },\n    \"custom\": {\n        \"nodes\": {\n            \"x_mitre_shortname\": {\n                \"JsString\": {\n                    \"value\": \"collection\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tactic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct MITRE ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.external_references[0].external_id).to.eql(\"TB0009\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics/TB0009",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics",
+								"TB0009"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tactic (ERROR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Correct error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.NotFoundError.message).to.include(\"Object with the specified MITRE ID does not exist\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL-API}}/tactics/TB0009",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"tactics",
+								"TB0009"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Software",
+			"item": [
+				{
+					"name": "Find all Software",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct software count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(62);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/software",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"software"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Find all Groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct groups count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(108);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/groups",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mitigations",
+			"item": [
+				{
+					"name": "Find all Mitigations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Correct mitigations count\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(42);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL-API}}/mitigations",
+							"host": [
+								"{{URL-API}}"
+							],
+							"path": [
+								"mitigations"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL-API",
+			"value": "http://127.0.0.1:8080/api"
+		}
+	]
+}

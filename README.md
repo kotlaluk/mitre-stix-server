@@ -80,10 +80,11 @@ psl-kotlaluk
 ├── data              - contains ATT&CK data from MITRE
 ├── project           - SBT configuration files
 ├── src
-    ├── main
-        ├── resources - project resources
-        ├── scala     - Scala packages
-        └── twirl     - HTML templates
+│   ├── main
+│       ├── resources - project resources
+│       ├── scala     - Scala packages
+│       └── twirl     - HTML templates
+└── tests             - Postman test collection
 ```
 
 ### Packages
@@ -107,6 +108,30 @@ This project uses the following frameworks and libraries:
 - [circe](https://circe.github.io/circe/) - JSON handling
 - [Twirl](https://github.com/playframework/twirl) - HTML template engine
 - [scalastix](https://github.com/workingDog/scalastix) - STIX implementation in Scala
+
+## Testing
+
+The API part of MITRE STIX Server can be tested using [Postman](https://www.postman.com/product/api-client/). A test collection is prepared in the `test` subfolder that can be run either using Posman GUI or via its CLI utility called [Newman](https://learning.postman.com/docs/running-collections/using-newman-cli/command-line-integration-with-newman/).
+
+To run the provided test collection using Newman:
+
+1. Install Newman using `npm`:
+
+   ```bash
+   npm install -g newman
+   ```
+
+2. Go to `psl-kotlaluk` directory:
+
+   ```bash
+   cd psl-kotlaluk
+   ```
+
+3. And run the collection with `newman`:
+
+   ```bash
+   newman run tests/mitre-stix-server.postman_collection.json
+   ```
 
 ## Author
 
