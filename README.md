@@ -26,10 +26,10 @@ ATT&CK data derives from the STIX fromat, as it uses a mix of predefined and cus
 ## Build & Run
 
 1. Clone this repostitory
-2. Go to `psl-kotlaluk` directory:
+2. Go to `mitre-stix-server` directory:
 
    ```bash
-   cd psl-kotlaluk
+   cd mitre-stix-server
    ```
 
 3. Compile and run the project with `sbt`:
@@ -38,7 +38,7 @@ ATT&CK data derives from the STIX fromat, as it uses a mix of predefined and cus
    sbt compile && sbt run
    ```
 
-4. HTTP server will start at [localhost:8080](http://127.0.0.1:8080) and it will load the provided [ATT&CK data](psl-kotlaluk/data/enterprise-attack.json).
+4. HTTP server will start at [localhost:8080](http://127.0.0.1:8080) and it will load the provided [ATT&CK data](mitre-stix-server/data/enterprise-attack.json).
 5. Open a web browser and browse to http://127.0.0.1:8080. You should see a clickable ATT&CK matrix.
 
 ## Usage
@@ -75,7 +75,7 @@ where `{OBJECT_ENDPOINT}` is URL endpoint for a particular ATT&CK  object (from 
 ### High-level overview
 
 ```
-psl-kotlaluk
+mitre-stix-server
 ├── build.sbt         - SBT build file
 ├── data              - contains ATT&CK data from MITRE
 ├── project           - SBT configuration files
@@ -121,10 +121,10 @@ To run the provided test collection using Newman:
    npm install -g newman
    ```
 
-2. Go to `psl-kotlaluk` directory:
+2. Go to `mitre-stix-server` directory:
 
    ```bash
-   cd psl-kotlaluk
+   cd mitre-stix-server
    ```
 
 3. And run the collection with `newman`:
